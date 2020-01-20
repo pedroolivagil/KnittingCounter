@@ -1,19 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_slideshow"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/new_project_name" />
+
+        <EditText
+            android:id="@+id/project_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="1"
+            android:hint="@string/new_project_name_placeholder"
+            android:inputType="textPersonName|textAutoComplete" />
+
+        <EditText
+            android:id="@+id/project_needle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="1"
+            android:hint="@string/new_project_needle_placeholder"
+            android:inputType="number|textPersonName|numberDecimal" />
+
+        <!-- Buttons gallery -->
+        <LinearLayout
+            android:id="@+id/btnCamera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding10"
+            android:background="@color/secondaryColor"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@drawable/ic_camera_black_24dp"
+                android:tint="@color/primaryDarkColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_size"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding10"
+                android:text="@string/label_img_camera" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnGalery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/secondaryColor"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@drawable/ic_apps_black_24dp"
+                android:tint="@color/primaryDarkColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_size"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding10"
+                android:text="@string/label_img_gallery" />
+
+        </LinearLayout>
+        <!-- Frame image -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@color/primaryLightColor"
+            android:padding="2dp">
+
+            <ImageView
+                android:id="@+id/image_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_crop_free_black_24dp"
+                android:tint="@color/primaryTextColor" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/primaryLightColor"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/btn_new_project" />
+    </LinearLayout>
+</ScrollView>

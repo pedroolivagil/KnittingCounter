@@ -18,6 +18,9 @@ import androidx.navigation.Navigation;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
+import com.olivadevelop.knittingcounter.tools.Tools;
+
+import java.util.Date;
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -36,6 +39,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mainActivity.openDrawerMenu(v);
                 }
             });
         }
@@ -45,14 +49,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onResume() {
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        /*md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"1", "Test Project 1", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"2", "Test Project 2", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"3", "Test Project 3", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"4", "Test Project 4", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"5", "Test Project 5", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"6", "Test Project 6", new Date().toString(), String.valueOf(0d)});
-        md.insert(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, new String[]{"7", "Test Project 7", new Date().toString(), String.valueOf(0d)});*/
-        Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, "_id DESC", null);
+        truncate(md);
+        Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num"}, "_id DESC");
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
                 R.layout.item_project,
@@ -64,15 +62,28 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         md.closeDB();
+        this.mainActivity.showFabButton();
+        this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_slideshow);
+            }
+        });
         super.onResume();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Tools.newSnackBarWithIcon(view, parent.getContext(), R.string.app_name, android.R.drawable.stat_sys_warning);
-        //Snackbar.make(view, "Project '" + id + "' selected", Snackbar.LENGTH_LONG).show();
         Bundle bundle = new Bundle();
         bundle.putLong("idProjectSelected", id);
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_gallery, bundle);
+    }
+
+    private void truncate(ManageDatabase md) {
+        md.truncate(ManageDatabase.TABLE_PROJECTS);
+        md.insert(ManageDatabase.TABLE_PROJECTS,
+                new String[]{"_id", "name", "creation_date", "lap", "needle_num"},
+                new String[]{String.valueOf(1), "Default project", Tools.formatDate(new Date()), String.valueOf(0d), String.valueOf(0d)}
+        );
     }
 }

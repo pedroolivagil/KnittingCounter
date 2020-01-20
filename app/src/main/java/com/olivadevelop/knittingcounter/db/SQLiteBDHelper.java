@@ -13,7 +13,8 @@ public class SQLiteBDHelper extends SQLiteOpenHelper {
             "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "name TEXT NOT NULL," +
             "creation_date TEXT NOT NULL," +
-            "lap INTEGER NOT NULL);";
+            "lap INTEGER NOT NULL," +
+            "needle_num INTEGER NOT NULL);";
 
     public SQLiteBDHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

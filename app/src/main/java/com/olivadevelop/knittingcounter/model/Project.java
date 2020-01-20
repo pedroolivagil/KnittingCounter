@@ -6,15 +6,20 @@ public class Project {
     private String name;
     private String creation_date;
     private Integer lap;
+    private Integer needle_num;
 
     public Project() {
     }
 
-    public Project(Integer _id, String name, String creation_date, Integer lap) {
-        this._id = _id;
-        this.name = name;
-        this.creation_date = creation_date;
-        this.lap = lap;
+    public void addLap() {
+        this.lap = lap + 1;
+    }
+
+    public void removeLap() {
+        this.lap = lap - 1;
+        if (this.lap < 0) {
+            this.lap = 0;
+        }
     }
 
     public Integer get_id() {
@@ -47,5 +52,13 @@ public class Project {
 
     public void setLap(Integer lap) {
         this.lap = lap;
+    }
+
+    public Integer getNeedle_num() {
+        return needle_num;
+    }
+
+    public void setNeedle_num(Integer needle_num) {
+        this.needle_num = needle_num;
     }
 }

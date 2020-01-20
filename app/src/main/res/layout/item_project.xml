@@ -5,62 +5,71 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        app:cardElevation="4dp">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:background="@color/secondary_light"
-            android:orientation="horizontal"
-            android:padding="2dp">
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/projectHomeImg"
+            <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="1"
+                android:layout_height="150dp"
                 android:background="@color/white"
-                android:scaleType="center"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+                android:orientation="horizontal"
+                android:padding="2dp">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/projectHomeImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="1"
+                    android:background="@color/white"
+                    android:scaleType="center"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-        <TextView
-            android:id="@+id/projectName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/secondary_light"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/title_size"
-            android:textStyle="bold" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/projectLastUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/linearLayout"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:alpha=".7"
-            android:background="@color/secondary_light"
-            android:gravity="right"
-            android:maxLines="1"
-            android:paddingLeft="6dp"
-            android:paddingTop="3dp"
-            android:paddingRight="6dp"
-            android:paddingBottom="2dp" />
+            <TextView
+                android:id="@+id/projectName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/secondaryLightColorAlpha55"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/title_size"
+                android:textStyle="bold" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/projectLastUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/linearLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:alpha=".7"
+                android:background="@color/secondaryLightColorAlpha55"
+                android:gravity="right"
+                android:maxLines="1"
+                android:paddingLeft="6dp"
+                android:paddingTop="3dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="2dp" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>
