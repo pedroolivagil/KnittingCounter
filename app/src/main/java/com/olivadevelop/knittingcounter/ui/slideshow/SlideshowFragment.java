@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
 public class SlideshowFragment extends Fragment implements View.OnClickListener {
@@ -109,8 +110,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        int code = 0;
-        Intent intent = null;
         if (v == btnCreate) {
             ManageDatabase md = new ManageDatabase(this.getContext(), false);
             int id = md.count(ManageDatabase.TABLE_PROJECTS);
@@ -120,42 +119,30 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             );
             md.closeDB();
         } else {
+            int code = 0;
+            Intent intent = null;
             if (v == lytBtnCamera) {
-                filename = Tools.getExternalStorage(this.mainActivity) + "home" + Tools.generateID() + ".jpg";
+                filename = Tools.getExternalStorage(this.mainActivity) + Tools.generateID() + ".jpg";
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 Uri output = FileProvider.getUriForFile(this.mainActivity, BuildConfig.APPLICATION_ID + ".provider", new File(filename));
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
                 code = TAKE_PICTURE;
-                new MediaScannerConnection.MediaScannerConnectionClient() {
-                    private MediaScannerConnection msc = null;
 
-                    {
-                        msc = new MediaScannerConnection(mainActivity.getApplicationContext(), this);
-                        msc.connect();
-                    }
-
-                    public void onMediaScannerConnected() {
-                        msc.scanFile(filename, null);
-                    }
-
-                    public void onScanCompleted(String path, Uri uri) {
-                        msc.disconnect();
-                    }
-                };
             } else if (v == lytBtnGallery) {
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 code = SELECT_PICTURE;
             }
-            startActivityForResult(intent, code);
+            if (intent != null && intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
+                startActivityForResult(intent, code);
+            }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == TAKE_PICTURE) {
-                ImageView iv = this.root.findViewById(R.id.image_thumb);
-                iv.setImageBitmap(BitmapFactory.decodeFile(filename));
+                image_thumb.setImageBitmap(BitmapFactory.decodeFile(filename));
             } else if (requestCode == SELECT_PICTURE) {
                 try {
                     Uri selectedImage = data.getData();
