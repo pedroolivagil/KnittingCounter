@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
@@ -33,7 +35,9 @@ import com.olivadevelop.knittingcounter.tools.Tools;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
@@ -117,9 +121,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             md.closeDB();
         } else {
             if (v == lytBtnCamera) {
-                filename = Tools.EXTERNAL_DIR + "home" + Tools.generateID() + ".jpg";
+                filename = Tools.getExternalStorage(this.mainActivity) + "home" + Tools.generateID() + ".jpg";
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                Uri output = FileProvider.getUriForFile(this.mainActivity, this.mainActivity.getApplicationContext().getPackageName() + ".provider", new File(filename));
+                Uri output = FileProvider.getUriForFile(this.mainActivity, BuildConfig.APPLICATION_ID + ".provider", new File(filename));
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
                 code = TAKE_PICTURE;
                 new MediaScannerConnection.MediaScannerConnectionClient() {

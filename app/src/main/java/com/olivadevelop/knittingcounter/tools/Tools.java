@@ -45,7 +45,7 @@ public abstract class Tools {
     }
 
     public static String getExternalStorage(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath() + EXTERNAL_DIR;
+        return context.getExternalFilesDir(null).getPath() + EXTERNAL_DIR;
     }
 
     public static String getRealPathFromURI(Context mContext, Uri contentUri) {
