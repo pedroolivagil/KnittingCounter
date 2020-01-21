@@ -102,7 +102,7 @@
                 android:src="@drawable/ic_crop_free_black_24dp" />
         </LinearLayout>
 
-        <Button
+        <!--<Button
             android:id="@+id/btnCreate"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -112,6 +112,6 @@
             android:background="@drawable/circle"
             android:backgroundTint="@color/primaryLightColor"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/btn_new_project" />
+            android:text="@string/btn_new_project" />-->
     </LinearLayout>
 </ScrollView>

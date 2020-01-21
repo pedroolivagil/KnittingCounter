@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,11 +33,26 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private View root;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.empty, menu);
+        inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_save_project) {
+            findProjects();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         this.root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -56,6 +73,18 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onResume() {
+        findProjects();
+        this.mainActivity.showFabButton();
+        this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_slideshow);
+            }
+        });
+        super.onResume();
+    }
+
+    private void findProjects() {
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
         Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"}, "_id DESC");
         if (items.getCount() == 0) {
@@ -71,14 +100,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         md.closeDB();
-        this.mainActivity.showFabButton();
-        this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_slideshow);
-            }
-        });
-        super.onResume();
     }
 
     @Override

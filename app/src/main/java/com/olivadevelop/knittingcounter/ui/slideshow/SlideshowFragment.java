@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -50,7 +51,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     private SlideshowViewModel slideshowViewModel;
     private MainActivity mainActivity;
     private View root;
-    private Button btnCreate;
+    private Button btnSave;
     private EditText projectName;
     private EditText projectNeedleNum;
     private LinearLayout lytBtnCamera;
@@ -61,9 +62,23 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     private PermissionsChecker permissionsChecker;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.empty, menu);
+        inflater.inflate(R.menu.new_project, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_save_project) {
+            createProject();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,8 +96,8 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             });
         }
-        this.btnCreate = this.root.findViewById(R.id.btnCreate);
-        this.btnCreate.setOnClickListener(this);
+        this.btnSave = this.root.findViewById(R.id.action_save_project);
+
         this.projectName = this.root.findViewById(R.id.project_name);
         this.projectNeedleNum = this.root.findViewById(R.id.project_needle);
 
@@ -117,32 +132,27 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         try {
-            if (v == btnCreate) {
-                ManageDatabase md = new ManageDatabase(this.getContext(), false);
-                createProject(md);
-            } else {
-                if (v == lytBtnCamera) {
-                    if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (takePictureIntent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                            File photoFile = createImageFile();
-                            // Continue only if the File was successfully created
-                            if (photoFile != null) {
-                                Uri photoURI = FileProvider.getUriForFile(this.root.getContext(),
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        photoFile
-                                );
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                startActivityForResult(takePictureIntent, TAKE_PICTURE);
-                            }
+            if (v == lytBtnCamera) {
+                if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePictureIntent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
+                        File photoFile = createImageFile();
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(this.root.getContext(),
+                                    BuildConfig.APPLICATION_ID + ".provider",
+                                    photoFile
+                            );
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, TAKE_PICTURE);
                         }
                     }
-                } else if (v == lytBtnGallery) {
-                    if (this.permissionsChecker.checkStoragePermission()) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                        if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                            startActivityForResult(intent, SELECT_PICTURE);
-                        }
+                }
+            } else if (v == lytBtnGallery) {
+                if (this.permissionsChecker.checkStoragePermission()) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
+                        startActivityForResult(intent, SELECT_PICTURE);
                     }
                 }
             }
@@ -201,13 +211,13 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         return image;
     }
 
-    private void createProject(ManageDatabase md) {
+    private void createProject() {
+        ManageDatabase md = new ManageDatabase(this.getContext(), false);
         int idTemp = md.count(ManageDatabase.TABLE_PROJECTS) + 1;
         long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,
                 new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"},
                 new String[]{String.valueOf(idTemp), this.projectName.getText().toString(), Tools.formatDate(new Date()), String.valueOf(0d), this.projectNeedleNum.getText().toString(), this.currentPhotoPath}
         );
-        md.closeDB();
         if (idNew > 0) {
             this.mainActivity.CustomSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
                 @Override
@@ -223,5 +233,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             }).show();
         }
+        md.closeDB();
     }
 }

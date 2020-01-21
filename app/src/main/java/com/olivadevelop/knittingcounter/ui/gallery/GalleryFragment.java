@@ -38,16 +38,16 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private ImageButton btnAmount;
     private ImageButton btnSubtract;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.empty, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
