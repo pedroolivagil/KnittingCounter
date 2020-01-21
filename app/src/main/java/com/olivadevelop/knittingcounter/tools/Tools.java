@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 public abstract class Tools {
-    public final static String EXTERNAL_DIR = "/KnittingCounterExtResouces/";
 
     public static Snackbar newSnackBarWithIcon(View v, Context cnxt, int string, int icon) {
         Snackbar snackbar = Snackbar.make(v, string, Snackbar.LENGTH_LONG);
@@ -42,10 +41,6 @@ public abstract class Tools {
     public static String formatDate(Date date, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         return sdf.format(date);
-    }
-
-    public static String getExternalStorage(Context context) {
-        return context.getExternalFilesDir(null).getPath() + EXTERNAL_DIR;
     }
 
     public static String getRealPathFromURI(Context mContext, Uri contentUri) {

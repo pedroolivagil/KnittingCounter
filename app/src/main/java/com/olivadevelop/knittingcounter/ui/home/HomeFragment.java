@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onResume() {
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
         truncate(md);
-        Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num"}, "_id DESC");
+        Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"}, "_id DESC");
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
                 R.layout.item_project,

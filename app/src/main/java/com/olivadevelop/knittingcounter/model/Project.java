@@ -7,6 +7,7 @@ public class Project {
     private String creation_date;
     private Integer lap;
     private Integer needle_num;
+    private String header_img_uri;
 
     public Project() {
     }
@@ -60,5 +61,13 @@ public class Project {
 
     public void setNeedle_num(Integer needle_num) {
         this.needle_num = needle_num;
+    }
+
+    public String getHeader_img_uri() {
+        return header_img_uri;
+    }
+
+    public void setHeader_img_uri(String header_img_uri) {
+        this.header_img_uri = header_img_uri;
     }
 }

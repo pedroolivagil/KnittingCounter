@@ -27,4 +27,7 @@
     <string name="label_updating_data">Updating data</string>
     <string name="label_img_camera">Take a picture from camera</string>
     <string name="label_img_gallery">Select photo from gallery</string>
+
+    <string name="error_image_new_project">A problem has occurred…</string>
+    <string name="label_close_snackbar">Close</string>
 </resources>

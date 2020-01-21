@@ -1,10 +1,14 @@
 package com.olivadevelop.knittingcounter;
 
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,6 +69,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);*//*
             Snackbar.make(view, "Crear proyecto", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }*/
+    }
+
+    public Snackbar CustomSnackBar(View v, @StringRes int text, @DrawableRes int icon) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(" ");
+        builder.setSpan(new ImageSpan(v.getContext(), icon), builder.length() - 1, builder.length(), 0);
+        builder.append(" ").append(getString(text));
+        final Snackbar snackbar = Snackbar.make(v, builder, Snackbar.LENGTH_INDEFINITE);
+        View sbView = snackbar.getView();
+        sbView.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+        snackbar.setAction(R.string.label_close_snackbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        return snackbar;
     }
 
     public FloatingActionButton getFab() {
