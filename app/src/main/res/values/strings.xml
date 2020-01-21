@@ -41,4 +41,8 @@
 
     <string name="error_image_new_project">A problem has occurred…</string>
     <string name="error_new_project">Cannot create the project</string>
+
+    <string name="title_activity_splashscreen">SplashscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
