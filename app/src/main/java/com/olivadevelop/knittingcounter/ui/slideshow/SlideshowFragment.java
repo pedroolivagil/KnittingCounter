@@ -215,6 +215,10 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     }
 
     private void createProject() {
+        if(Tools.isNotEmpty(this.projectName.getText()) && Tools.isNotEmpty(this.projectNeedleNum.getText())){
+            this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).show();
+            return;
+        }
         ManageDatabase md = new ManageDatabase(this.getContext(), false);
         int idTemp = md.count(ManageDatabase.TABLE_PROJECTS) + 1;
         long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,

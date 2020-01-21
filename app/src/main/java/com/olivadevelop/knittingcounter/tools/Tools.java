@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -52,5 +53,9 @@ public abstract class Tools {
         String result = cursor.getString(column_index);
         cursor.close();
         return result;
+    }
+
+    public static boolean isNotEmpty(Editable text) {
+        return text != null && !text.toString().trim().isEmpty();
     }
 }
