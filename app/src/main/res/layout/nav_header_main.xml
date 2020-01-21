@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
+    android:background="@color/primaryLightColor"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/imageHeader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha=".5"
-        android:background="@drawable/shep"
-        android:scaleType="centerCrop" />
+        android:adjustViewBounds="false"
+        android:alpha=".2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/wool_bg2" />
 
     <LinearLayout
         android:layout_width="match_parent"
