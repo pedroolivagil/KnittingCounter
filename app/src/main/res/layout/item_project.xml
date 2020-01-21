@@ -47,32 +47,30 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/projectName"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linearLayout"
-                android:layout_alignParentEnd="true"
-                android:background="@color/white"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/title_size"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/projectNeedle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/projectName"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="-13dp"
-                android:background="@color/white"
                 android:maxLines="1"
                 android:padding="3dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:textColor="@color/secondary_text"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/projectName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout"
+                android:layout_alignParentEnd="true"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/title_size"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/projectLastUpdate"

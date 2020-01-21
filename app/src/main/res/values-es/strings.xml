@@ -1,4 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Knitting Counter</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_gallery">Proyecto</string>
+    <string name="menu_slideshow">Nuevo proyecto</string>
+    <string name="menu_tools">Herramientas</string>
+    <string name="menu_share">Compartir</string>
+    <string name="menu_send">Enviar</string>
+
+    <string name="action_settings">Configuraciones</string>
+
+    <string name="btn_reset">Reiniciar</string>
+    <string name="btn_amount">Sumar</string>
+    <string name="btn_new_project">Crear</string>
+    <string name="btn_retry">Reintentar</string>
+    <string name="btn_bar_save">Guardar</string>
+    <string name="btn_bar_update">Actualizar</string>
+    <string name="btn_bar_delete">Eliminar</string>
+
+    <string name="new_project_name">Proyecto</string>
+    <string name="new_project_name_placeholder">Ingrese el nombre del proyecto</string>
+    <string name="new_project_needle_placeholder">Ingrese el número de aguja</string>
+
+    <string name="title_dialog_delete">Eliminando…</string>
+
+    <string name="label_updating_data">Actializando datos</string>
+    <string name="label_img_camera">Tomar una foto de la cámara</string>
+    <string name="label_img_gallery">Seleccionar foto de la galería</string>
+    <string name="label_updating">Actializando</string>
+    <string name="label_close_snackbar">Cerrar</string>
+    <string name="label_new_project_ok">Proyecto creado correctamente</string>
+    <string name="label_needle">Aguja</string>
+    <string name="label_dialog_delete">¿Estás seguro de que deseas eliminar este proyecto?</string>
+
+    <string name="default_project_name">Proyecto de ejemplo</string>
+
+    <string name="error_image_new_project">Ha ocurrido un problema…</string>
+    <string name="error_new_project">No se puede crear el proyecto</string>
 </resources>

@@ -7,7 +7,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Project</string>
-    <string name="menu_slideshow">New Project</string>
+    <string name="menu_slideshow">New project</string>
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
@@ -16,27 +16,29 @@
 
     <string name="btn_reset">Reset</string>
     <string name="btn_amount">Amount</string>
+    <string name="btn_new_project">Create</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_bar_save">Save</string>
+    <string name="btn_bar_update">Update</string>
+    <string name="btn_bar_delete">Delete</string>
 
     <string name="new_project_name">Project</string>
     <string name="new_project_name_placeholder">Enter the name of the project</string>
     <string name="new_project_needle_placeholder">Insert the needle number</string>
-    <string name="btn_new_project">Create</string>
+
+    <string name="title_dialog_delete">Deleting…</string>
 
     <string name="label_updating_data">Updating data</string>
     <string name="label_img_camera">Take a picture from camera</string>
     <string name="label_img_gallery">Select photo from gallery</string>
     <string name="label_updating">Updating</string>
-
-    <string name="error_image_new_project">A problem has occurred…</string>
     <string name="label_close_snackbar">Close</string>
     <string name="label_new_project_ok">Project created successfully</string>
-    <string name="error_new_project">Cannot create the project</string>
-    <string name="btn_retry">Retry</string>
-    <string name="default_project_name">Default project name</string>
-    <string name="btn_bar_save">Save</string>
-    <string name="btn_bar_update">Update</string>
     <string name="label_needle">Needle</string>
-    <string name="btn_bar_delete">Delete</string>
-    <string name="title_dialog_delete">Deleting…</string>
     <string name="label_dialog_delete">Are you sure you want to delete this project?</string>
+
+    <string name="default_project_name">Default project name</string>
+
+    <string name="error_image_new_project">A problem has occurred…</string>
+    <string name="error_new_project">Cannot create the project</string>
 </resources>

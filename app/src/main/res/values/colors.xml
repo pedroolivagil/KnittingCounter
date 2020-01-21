@@ -9,6 +9,9 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
 
+    <color name="primaryDeepLightColor">#FFEBF2</color>
+    <color name="primaryDeepDarkColor">#7C3E4C</color>
+
     <color name="white">#FFFFFF</color>
     <color name="gray_e">#EEEEEE</color>
     <color name="blackAlpha9">#99444444</color>
