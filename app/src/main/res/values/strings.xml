@@ -35,4 +35,8 @@
     <string name="default_project_name">Default project name</string>
     <string name="btn_bar_save">Save</string>
     <string name="btn_bar_update">Update</string>
+    <string name="label_needle">Needle</string>
+    <string name="btn_bar_delete">Delete</string>
+    <string name="title_dialog_delete">Deleting…</string>
+    <string name="label_dialog_delete">Are you sure you want to delete this project?</string>
 </resources>

@@ -14,6 +14,9 @@ public class Project {
 
     public void addLap() {
         this.lap = lap + 1;
+        if (this.lap > 9999) {
+            this.lap = 9999;
+        }
     }
 
     public void removeLap() {

@@ -24,7 +24,9 @@
             android:layout_height="wrap_content"
             android:ems="1"
             android:hint="@string/new_project_name_placeholder"
-            android:inputType="textPersonName|textAutoComplete" />
+            android:inputType="textPersonName|textAutoComplete"
+            android:lines="1"
+            android:maxLength="100" />
 
         <EditText
             android:id="@+id/project_needle"
@@ -32,7 +34,9 @@
             android:layout_height="wrap_content"
             android:ems="1"
             android:hint="@string/new_project_needle_placeholder"
-            android:inputType="number|textPersonName|numberDecimal" />
+            android:inputType="number|textPersonName|numberDecimal"
+            android:lines="1"
+            android:maxLength="10" />
 
         <!-- Buttons gallery -->
         <LinearLayout

@@ -1,11 +1,15 @@
 package com.olivadevelop.knittingcounter.ui.gallery;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -24,6 +28,8 @@ import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
 import com.olivadevelop.knittingcounter.model.Project;
 
+import java.io.File;
+
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
@@ -41,14 +47,21 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        this.mainActivity.hideImputMedia();
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.empty, menu);
+        inflater.inflate(R.menu.project, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_delete_project) {
+            deleteProject();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -57,6 +70,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         this.galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
         this.root = inflater.inflate(R.layout.fragment_gallery, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
+        this.mainActivity.hideImputMedia();
 
         if (this.mainActivity != null) {
             Toolbar toolbar = this.mainActivity.findViewById(R.id.toolbar);
@@ -99,8 +113,8 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 this.projectSelected.setCreation_date(items.getString(2));
                 this.projectSelected.setLap(items.getInt(3));
             }
-            if (projectSelected != null) {
-                TextView textView = root.findViewById(R.id.text_gallery);
+            if (this.projectSelected != null) {
+                TextView textView = this.root.findViewById(R.id.text_gallery);
                 textView.setText(this.projectSelected.getName());
                 updateTextCounter();
             }
@@ -124,15 +138,57 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             this.projectSelected.removeLap();
         }
         ContentValues cv = new ContentValues();
-        cv.put("lap", projectSelected.getLap());
+        cv.put("lap", this.projectSelected.getLap());
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        md.update(ManageDatabase.TABLE_PROJECTS, cv, "_id = ?", new String[]{String.valueOf(projectSelected.get_id())});
+        md.update(ManageDatabase.TABLE_PROJECTS, cv, "_id = ?", new String[]{String.valueOf(this.projectSelected.get_id())});
         md.closeDB();
 
         updateTextCounter();
     }
 
     private void updateTextCounter() {
-        this.textCounter.setText("" + this.projectSelected.getLap());
+        this.textCounter.setText(String.valueOf(this.projectSelected.getLap()));
+    }
+
+    private void _deleteProject() {
+        // Remove header img
+        if (this.projectSelected.getHeader_img_uri() != null) {
+            File file = new File(this.projectSelected.getHeader_img_uri());
+            if (file.exists() && file.delete()) {
+                deleteProjectData();
+            }
+        } else {
+            deleteProjectData();
+        }
+        // Remove data
+    }
+
+    private void deleteProjectData() {
+        ManageDatabase md = new ManageDatabase(this.getContext(), true);
+        md.delete(ManageDatabase.TABLE_PROJECTS, "_id = ?", new String[]{String.valueOf(this.projectSelected.get_id())});
+        md.closeDB();
+        Navigation.findNavController(root).navigate(R.id.action_nav_gallery_to_nav_home);
+    }
+
+    public void deleteProject() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.root.getContext());
+        builder.setTitle(R.string.title_dialog_delete);
+        builder.setMessage(R.string.label_dialog_delete);
+        // Add the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                _deleteProject();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                dialog.dismiss();
+            }
+        });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

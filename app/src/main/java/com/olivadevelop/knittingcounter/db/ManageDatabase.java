@@ -42,6 +42,14 @@ public class ManageDatabase {
         return id;
     }
 
+    public Cursor select(String table, String[] fields, String orderBy) {
+        return select(table, fields, orderBy, null, null);
+    }
+
+    public Cursor select(String table, String[] fields, String orderBy, String whereClause, String[] whereArgs) {
+        return db.query(table, fields, whereClause, whereArgs, null, null, orderBy, null);
+    }
+
     public long insert(String table, String[] fields, String[] values) {
         ContentValues registro = new ContentValues();
         for (int z = 0; z < fields.length; z++) {
@@ -51,16 +59,12 @@ public class ManageDatabase {
         return db.insert(table, null, registro);
     }
 
-    public Cursor select(String table, String[] fields, String orderBy) {
-        return select(table, fields, orderBy, null, null);
-    }
-
-    public Cursor select(String table, String[] fields, String orderBy, String whereClause, String[] whereArgs) {
-        return db.query(table, fields, whereClause, whereArgs, null, null, orderBy, null);
-    }
-
     public int update(String table, ContentValues values, String whereClause, String[] whereArgs) {
         return db.update(table, values, whereClause, whereArgs);
+    }
+
+    public int delete(String table, String whereClause, String[] whereArgs) {
+        return db.delete(table, whereClause, whereArgs);
     }
 
     public void closeDB() {

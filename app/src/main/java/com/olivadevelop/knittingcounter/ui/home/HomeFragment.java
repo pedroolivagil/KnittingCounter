@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
+import com.olivadevelop.knittingcounter.tools.ProjectAdapter;
 import com.olivadevelop.knittingcounter.tools.Tools;
 
 import java.util.Date;
@@ -101,11 +102,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         if (items.getCount() == 0) {
             createDefault(md);
         }
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
+        /*SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
                 R.layout.item_project,
                 items,
-                new String[]{"name", "creation_date"},
-                new int[]{R.id.projectName, R.id.projectLastUpdate});
+                new String[]{"name", "creation_date", "header_img_uri"},
+                new int[]{R.id.projectName, R.id.projectLastUpdate, });*/
+        ProjectAdapter adapter = new ProjectAdapter(this.mainActivity, items);
 
         ListView listView = root.findViewById(R.id.projectList);
         listView.setAdapter(adapter);
