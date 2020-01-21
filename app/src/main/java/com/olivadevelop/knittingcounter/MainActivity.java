@@ -72,19 +72,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public Snackbar customSnackBar(View v, @StringRes int text, @DrawableRes int icon) {
+        return customSnackBar(v, text, icon, Snackbar.LENGTH_INDEFINITE);
+    }
+
+    public Snackbar customSnackBar(View v, @StringRes int text, @DrawableRes int icon, int duration) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(" ");
         builder.setSpan(new ImageSpan(v.getContext(), icon), builder.length() - 1, builder.length(), 0);
         builder.append(" ").append(getString(text));
-        final Snackbar snackbar = Snackbar.make(v, builder, Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(v, builder, duration);
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(getResources().getColor(R.color.primaryColor));
-        snackbar.setAction(R.string.label_close_snackbar, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbar.dismiss();
-            }
-        });
+        if (duration == Snackbar.LENGTH_INDEFINITE) {
+            snackbar.setAction(R.string.label_close_snackbar, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            });
+        }
         return snackbar;
     }
 

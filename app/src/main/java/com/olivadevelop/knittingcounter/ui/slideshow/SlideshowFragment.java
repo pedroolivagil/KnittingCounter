@@ -134,6 +134,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         try {
             if (v == lytBtnCamera) {
+                this.mainActivity.hideImputMedia();
                 if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePictureIntent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
@@ -150,6 +151,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                     }
                 }
             } else if (v == lytBtnGallery) {
+                this.mainActivity.hideImputMedia();
                 if (this.permissionsChecker.checkStoragePermission()) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                     if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
