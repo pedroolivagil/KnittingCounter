@@ -30,4 +30,9 @@
 
     <string name="error_image_new_project">A problem has occurred…</string>
     <string name="label_close_snackbar">Close</string>
+    <string name="label_new_project_ok">Project created successfully</string>
+    <string name="error_new_project">Cannot create the project</string>
+    <string name="btn_retry">Retry</string>
+    <string name="default_project_name">Default project name</string>
+    <string name="btn_bar_save">Save</string>
 </resources>

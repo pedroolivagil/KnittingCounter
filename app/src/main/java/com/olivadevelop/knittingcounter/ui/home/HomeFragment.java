@@ -3,6 +3,8 @@ package com.olivadevelop.knittingcounter.ui.home;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +30,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private MainActivity mainActivity;
     private View root;
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         this.root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -49,9 +57,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onResume() {
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        truncate(md);
         Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"}, "_id DESC");
-
+        if (items.getCount() == 0) {
+            createDefault(md);
+        }
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
                 R.layout.item_project,
                 items,
@@ -79,11 +88,10 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_gallery, bundle);
     }
 
-    private void truncate(ManageDatabase md) {
-        md.truncate(ManageDatabase.TABLE_PROJECTS);
+    private void createDefault(ManageDatabase md) {
         md.insert(ManageDatabase.TABLE_PROJECTS,
                 new String[]{"_id", "name", "creation_date", "lap", "needle_num"},
-                new String[]{String.valueOf(1), "Default project", Tools.formatDate(new Date()), String.valueOf(0d), String.valueOf(0d)}
+                new String[]{String.valueOf(1), getString(R.string.default_project_name), Tools.formatDate(new Date()), String.valueOf(0d), String.valueOf(3d)}
         );
     }
 }

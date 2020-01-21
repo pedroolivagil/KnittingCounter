@@ -42,13 +42,13 @@ public class ManageDatabase {
         return id;
     }
 
-    public void insert(String table, String[] fields, String[] values) {
+    public long insert(String table, String[] fields, String[] values) {
         ContentValues registro = new ContentValues();
         for (int z = 0; z < fields.length; z++) {
             registro.put(fields[z], values[z]);
         }
         // ejecutamos el registro
-        db.insert(table, null, registro);
+        return db.insert(table, null, registro);
     }
 
     public Cursor select(String table, String[] fields, String orderBy) {

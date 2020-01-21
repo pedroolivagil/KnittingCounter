@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,7 +27,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
@@ -35,7 +36,6 @@ import com.olivadevelop.knittingcounter.tools.Tools;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -59,6 +59,12 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
     private String currentPhotoPath;
     private PermissionsChecker permissionsChecker;
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.empty, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.slideshowViewModel = ViewModelProviders.of(this).get(SlideshowViewModel.class);
@@ -113,12 +119,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         try {
             if (v == btnCreate) {
                 ManageDatabase md = new ManageDatabase(this.getContext(), false);
-                int id = md.count(ManageDatabase.TABLE_PROJECTS);
-                md.insert(ManageDatabase.TABLE_PROJECTS,
-                        new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"},
-                        new String[]{String.valueOf(id), this.projectName.getText().toString(), Tools.formatDate(new Date()), String.valueOf(0d), this.projectNeedleNum.getText().toString(), this.currentPhotoPath}
-                );
-                md.closeDB();
+                createProject(md);
             } else {
                 if (v == lytBtnCamera) {
                     if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
@@ -168,7 +169,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                         imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
                     }
                     image_thumb.setImageBitmap(imageBitmap);
-                    //image_thumb.setImageBitmap(BitmapFactory.decodeFile(filename));
                 } else if (requestCode == SELECT_PICTURE) {
                     Uri selectedImage = data.getData();
                     InputStream is;
@@ -201,13 +201,27 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         return image;
     }
 
-    private static Bitmap cropAndScale(Bitmap source, int scale) {
-        int factor = source.getHeight() <= source.getWidth() ? source.getHeight() : source.getWidth();
-        int longer = source.getHeight() >= source.getWidth() ? source.getHeight() : source.getWidth();
-        int x = source.getHeight() >= source.getWidth() ? 0 : (longer - factor) / 2;
-        int y = source.getHeight() <= source.getWidth() ? 0 : (longer - factor) / 2;
-        source = Bitmap.createBitmap(source, x, y, factor, factor);
-        source = Bitmap.createScaledBitmap(source, scale, scale, false);
-        return source;
+    private void createProject(ManageDatabase md) {
+        int idTemp = md.count(ManageDatabase.TABLE_PROJECTS) + 1;
+        long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,
+                new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"},
+                new String[]{String.valueOf(idTemp), this.projectName.getText().toString(), Tools.formatDate(new Date()), String.valueOf(0d), this.projectNeedleNum.getText().toString(), this.currentPhotoPath}
+        );
+        md.closeDB();
+        if (idNew > 0) {
+            this.mainActivity.CustomSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
+                }
+            }).show();
+        } else {
+            this.mainActivity.CustomSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
+                }
+            }).show();
+        }
     }
 }
