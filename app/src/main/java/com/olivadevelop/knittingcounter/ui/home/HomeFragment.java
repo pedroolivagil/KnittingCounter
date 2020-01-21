@@ -104,8 +104,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
                 R.layout.item_project,
                 items,
-                new String[]{"name", "creation_date"},
-                new int[]{R.id.projectName, R.id.projectLastUpdate});
+                new String[]{"name", "creation_date", "header_img_uri"},
+                new int[]{R.id.projectName, R.id.projectLastUpdate, });
 
         ListView listView = root.findViewById(R.id.projectList);
         listView.setAdapter(adapter);
