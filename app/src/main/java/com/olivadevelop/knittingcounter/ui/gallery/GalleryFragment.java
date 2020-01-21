@@ -41,6 +41,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        this.mainActivity.hideImputMedia();
         super.onCreate(savedInstanceState);
     }
 

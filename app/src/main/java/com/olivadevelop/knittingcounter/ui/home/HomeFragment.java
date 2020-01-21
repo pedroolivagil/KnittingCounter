@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -74,6 +75,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onResume() {
         findProjects();
+        this.mainActivity.hideImputMedia();
         this.mainActivity.showFabButton();
         this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +84,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             }
         });
         super.onResume();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("idProjectSelected", id);
+        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_gallery, bundle);
     }
 
     private void findProjects() {
@@ -100,13 +109,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         md.closeDB();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Bundle bundle = new Bundle();
-        bundle.putLong("idProjectSelected", id);
-        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_gallery, bundle);
     }
 
     private void createDefault(ManageDatabase md) {

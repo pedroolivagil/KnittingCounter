@@ -125,6 +125,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         this.mainActivity.hideFabButton();
+        this.mainActivity.hideImputMedia();
         this.mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onResume();
     }
@@ -158,7 +159,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             }
         } catch (Exception e) {
             System.out.println("ERROR: " + e);
-            this.mainActivity.CustomSnackBar(this.root, R.string.error_image_new_project,
+            this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project,
                     R.drawable.ic_warning_black_18dp).show();
         }
     }
@@ -191,7 +192,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                this.mainActivity.CustomSnackBar(this.root, R.string.error_image_new_project,
+                this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project,
                         R.drawable.ic_warning_black_18dp).show();
             }
         }
@@ -219,14 +220,14 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 new String[]{String.valueOf(idTemp), this.projectName.getText().toString(), Tools.formatDate(new Date()), String.valueOf(0d), this.projectNeedleNum.getText().toString(), this.currentPhotoPath}
         );
         if (idNew > 0) {
-            this.mainActivity.CustomSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
+            this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
                 }
             }).show();
         } else {
-            this.mainActivity.CustomSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+            this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);

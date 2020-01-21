@@ -6,6 +6,7 @@ import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         //, R.id.nav_slideshow, R.id.nav_tools, R.id.nav_share, R.id.nav_send
-        this.mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_gallery)
+        this.mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(this.drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }*/
     }
 
-    public Snackbar CustomSnackBar(View v, @StringRes int text, @DrawableRes int icon) {
+    public Snackbar customSnackBar(View v, @StringRes int text, @DrawableRes int icon) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(" ");
         builder.setSpan(new ImageSpan(v.getContext(), icon), builder.length() - 1, builder.length(), 0);
@@ -85,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         return snackbar;
+    }
+
+    public void hideImputMedia() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public FloatingActionButton getFab() {
