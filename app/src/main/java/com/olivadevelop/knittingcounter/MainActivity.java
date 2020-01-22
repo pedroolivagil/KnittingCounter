@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             mensaje.show();
+        } else {
+            super.onBackPressed();
         }
     }
 
