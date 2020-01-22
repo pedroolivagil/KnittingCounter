@@ -66,6 +66,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         this.mainActivity = (MainActivity) this.getActivity();
         if (this.mainActivity != null) {
             this.mainActivity.hideImputMedia(this.root);
+            this.mainActivity.setCurrentFragment(this);
         }
 
         if (this.mainActivity != null) {

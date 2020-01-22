@@ -67,6 +67,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                     mainActivity.openDrawerMenu(v);
                 }
             });
+            this.mainActivity.setCurrentFragment(this);
         }
         return root;
     }

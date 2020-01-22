@@ -45,8 +45,8 @@ public class SplashscreenActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    finish();
                     startActivity(new Intent(SplashscreenActivity.this, MainActivity.class));
+                    finish();
                 }
             }
         };

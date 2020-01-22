@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
@@ -56,6 +57,8 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     private String currentPhotoPath;
     private PermissionsChecker permissionsChecker;
 
+    private Snackbar customSnackbar;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -76,6 +79,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
@@ -86,9 +90,11 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mainActivity.setCustomSnackbar(customSnackbar);
                     mainActivity.onBackPressed();
                 }
             });
+            this.mainActivity.setCurrentFragment(this);
         }
 
         this.projectName = this.root.findViewById(R.id.project_name);
@@ -103,6 +109,8 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
         this.permissionsChecker.checkStoragePermission();
         this.permissionsChecker.checkCameraPermission();
+
+        resetForm();
 
         return this.root;
     }
@@ -123,6 +131,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         this.mainActivity.hideFabButton();
         this.mainActivity.hideImputMedia(this.root);
         this.mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        if (this.customSnackbar != null) {
+            this.customSnackbar.dismiss();
+        }
         super.onResume();
     }
 
@@ -146,13 +157,15 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                         }
                     }
                 } else {
-                    this.mainActivity.customSnackBar(this.root, R.string.error_permissions_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+                    this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_permissions_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             permissionsChecker.checkStoragePermission();
                             permissionsChecker.checkCameraPermission();
                         }
-                    }).show();
+                    });
+                    this.customSnackbar.show();
+                    this.mainActivity.setCustomSnackbar(this.customSnackbar);
                 }
             } else if (v == lytBtnGallery) {
                 this.mainActivity.hideImputMedia(this.root);
@@ -164,7 +177,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             }
         } catch (Exception e) {
-            this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp).show();
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp);
+            this.customSnackbar.show();
+            this.mainActivity.setCustomSnackbar(this.customSnackbar);
         }
     }
 
@@ -199,7 +214,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                     }
                 }
             } catch (Exception e) {
-                this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp).show();
+                this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp);
+                this.customSnackbar.show();
+                this.mainActivity.setCustomSnackbar(this.customSnackbar);
             }
         }
     }
@@ -221,22 +238,26 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     private void createProject() {
         this.mainActivity.hideImputMedia(this.root);
         if (!Tools.isNotEmpty(this.projectName.getText()) && !Tools.isNotEmpty(this.projectNeedleNum.getText())) {
-            this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     createProject();
                 }
-            }).show();
+            });
+            this.customSnackbar.show();
+            this.mainActivity.setCustomSnackbar(this.customSnackbar);
             return;
         }
         Project pExists = ProjectController.getInstance().findByName(this.mainActivity, this.projectName.getText().toString());
         if (pExists != null) {
-            this.mainActivity.customSnackBar(this.root, R.string.error_new_project_already_exists, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_clean, new View.OnClickListener() {
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_new_project_already_exists, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_clean, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     resetForm();
                 }
-            }).show();
+            });
+            this.customSnackbar.show();
+            this.mainActivity.setCustomSnackbar(this.customSnackbar);
             return;
         }
 
@@ -249,26 +270,28 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
         if (idNew > 0) {
             resetForm();
-            this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
                 }
-            }).show();
+            });
         } else {
-            this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     createProject();
                 }
-            }).show();
+            });
         }
+        this.customSnackbar.show();
+        this.mainActivity.setCustomSnackbar(this.customSnackbar);
     }
 
     private void resetForm() {
         this.currentPhotoPath = null;
         this.projectName.setText("");
-        this.projectNeedleNum.setText("");
+        this.projectNeedleNum.setText("0");
         this.image_thumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
         this.requestCode = 0;
     }

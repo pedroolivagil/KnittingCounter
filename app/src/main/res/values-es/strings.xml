@@ -45,4 +45,5 @@
     <string name="error_new_project_already_exists">Ya existe un proyecto con ese nombre</string>
     <string name="error_permissions_new_project">Revisa los permisos de la app para hacer esto…</string>
     <string name="error_delete_project">Error al borrar el proyecto…</string>
+    <string name="title_exit_app">¿Estás seguro que quieres salir?</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.olivadevelop.knittingcounter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -16,6 +18,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,12 +27,16 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.olivadevelop.knittingcounter.ui.home.HomeFragment;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
+    private Snackbar customSnackbar;
+
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.fab = findViewById(R.id.fab);
-        this.fab.setOnClickListener(this);
 
         this.drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        //, R.id.nav_slideshow, R.id.nav_tools, R.id.nav_share, R.id.nav_send
         this.mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(this.drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -66,12 +69,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View view) {
-        /* if (view == fab) {
-         *//* Intent intent = new Intent(this, NewProject.class);
-            startActivity(intent);*//*
-            Snackbar.make(view, "Crear proyecto", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        }*/
+    public void onBackPressed() {
+        if (this.customSnackbar != null) {
+            this.customSnackbar.dismiss();
+            this.customSnackbar = null;
+            super.onBackPressed();
+        }
+        if (this.currentFragment != null && this.currentFragment.getClass().equals(HomeFragment.class)) {
+            AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
+            mensaje.setTitle(R.string.title_exit_app);
+            mensaje.setCancelable(false);
+            mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            mensaje.show();
+        }
     }
 
     public Snackbar customSnackBar(View v, @StringRes int text, @DrawableRes int icon) {
@@ -120,5 +141,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void showFabButton() {
         this.fab.show();
+    }
+
+    public void setCustomSnackbar(Snackbar customSnackbar) {
+        this.customSnackbar = customSnackbar;
+    }
+
+    public void setCurrentFragment(Fragment currentFragment) {
+        this.currentFragment = currentFragment;
     }
 }

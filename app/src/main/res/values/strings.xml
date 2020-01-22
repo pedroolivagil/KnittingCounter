@@ -29,6 +29,7 @@
 
     <string name="title_dialog_delete">Deleting…</string>
     <string name="title_activity_splashscreen">Welcome</string>
+    <string name="title_exit_app">Are you sure you want to leave?</string>
 
     <string name="label_updating_data">Updating data</string>
     <string name="label_img_camera">Take a picture from camera</string>
