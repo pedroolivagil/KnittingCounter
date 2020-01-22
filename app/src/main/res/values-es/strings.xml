@@ -4,7 +4,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Inicio</string>
+    <string name="menu_home">Proyectos</string>
     <string name="menu_gallery">Proyecto</string>
     <string name="menu_slideshow">Nuevo proyecto</string>
     <string name="menu_tools">Herramientas</string>

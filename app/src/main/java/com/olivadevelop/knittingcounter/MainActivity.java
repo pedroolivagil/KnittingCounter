@@ -70,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (this.customSnackbar != null) {
-            this.customSnackbar.dismiss();
-            this.customSnackbar = null;
-            super.onBackPressed();
-        }
         if (this.currentFragment != null && this.currentFragment.getClass().equals(HomeFragment.class)) {
             AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
             mensaje.setTitle(R.string.title_exit_app);
@@ -92,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             mensaje.show();
+        } else {
+            if (this.customSnackbar != null) {
+                this.customSnackbar.dismiss();
+                this.customSnackbar = null;
+            }
+            super.onBackPressed();
         }
     }
 
