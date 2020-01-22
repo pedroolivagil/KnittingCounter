@@ -11,6 +11,7 @@ public class Project {
     public static final String COL_LAP = "lap";
     public static final String COL_NEEDLE_NUM = "needle_num";
     public static final String COL_HEADER_IMG_URI = "header_img_uri";
+    public static final String COL_OPTION_HEADER_IMG = "option_header_img";
 
     private Integer _id;
     private String name;
@@ -18,6 +19,8 @@ public class Project {
     private Integer lap = 0;
     private Float needleNum = 0f;
     private String headerImgUri;
+
+    private int optionHeaderImage = 0;
 
     public Project() {
     }
@@ -85,5 +88,13 @@ public class Project {
 
     public void setHeaderImgUri(String headerImgUri) {
         this.headerImgUri = headerImgUri;
+    }
+
+    public int getOptionHeaderImage() {
+        return optionHeaderImage;
+    }
+
+    public void setOptionHeaderImage(int optionHeaderImage) {
+        this.optionHeaderImage = optionHeaderImage;
     }
 }

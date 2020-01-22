@@ -19,7 +19,7 @@ public class ManageDatabase {
 
     public ManageDatabase(Context ct, boolean toRead) {
         // Creamos la base de datos (Context, string, cursorFactory, int))
-        SQLiteBDHelper currentDB = new SQLiteBDHelper(ct, DATA_BASE, null, 4);
+        SQLiteBDHelper currentDB = new SQLiteBDHelper(ct, DATA_BASE, null, 5);
         if (toRead) {
             // modo lectura
             db = currentDB.getReadableDatabase();

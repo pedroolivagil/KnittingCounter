@@ -15,7 +15,8 @@ public class SQLiteBDHelper extends SQLiteOpenHelper {
             "creation_date TEXT NOT NULL," +
             "lap INTEGER NOT NULL," +
             "needle_num INTEGER NOT NULL," +
-            "header_img_uri TEXT);";
+            "header_img_uri TEXT," +
+            "option_header_img INTEGER DEFAULT 0);";
 
     public SQLiteBDHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

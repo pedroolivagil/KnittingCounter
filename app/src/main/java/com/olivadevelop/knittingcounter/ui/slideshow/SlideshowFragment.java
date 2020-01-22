@@ -44,8 +44,6 @@ import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavControlle
 
 public class SlideshowFragment extends Fragment implements View.OnClickListener {
 
-    private static int TAKE_PICTURE = 1;
-    private static int SELECT_PICTURE = 2;
     private MainActivity mainActivity;
     private View root;
     private EditText projectName;
@@ -54,6 +52,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     private LinearLayout lytBtnGallery;
     private ImageView image_thumb;
 
+    private int requestCode = 0;
     private String currentPhotoPath;
     private PermissionsChecker permissionsChecker;
 
@@ -143,7 +142,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                                     photoFile
                             );
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(takePictureIntent, TAKE_PICTURE);
+                            startActivityForResult(takePictureIntent, ProjectController.TAKE_PICTURE);
                         }
                     }
                 } else {
@@ -160,7 +159,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 if (this.permissionsChecker.checkStoragePermission()) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                     if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                        startActivityForResult(intent, SELECT_PICTURE);
+                        startActivityForResult(intent, ProjectController.SELECT_PICTURE);
                     }
                 }
             }
@@ -172,8 +171,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            this.requestCode = requestCode;
             try {
-                if (requestCode == TAKE_PICTURE) {
+                if (requestCode == ProjectController.TAKE_PICTURE) {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap;
                     if (extras == null) {
@@ -183,8 +183,8 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                     } else {
                         imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
                     }
-                    image_thumb.setImageBitmap(imageBitmap);
-                } else if (requestCode == SELECT_PICTURE) {
+                    this.image_thumb.setImageBitmap(imageBitmap);
+                } else if (requestCode == ProjectController.SELECT_PICTURE) {
                     Uri selectedImage = data.getData();
                     if (selectedImage != null) {
                         InputStream is = this.mainActivity.getContentResolver().openInputStream(selectedImage);
@@ -199,9 +199,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project,
-                        R.drawable.ic_warning_black_18dp).show();
+                this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp).show();
             }
         }
     }
@@ -246,6 +244,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         p.setName(this.projectName.getText().toString());
         p.setHeaderImgUri(this.currentPhotoPath);
         p.setNeedleNum(Float.valueOf(this.projectNeedleNum.getText().toString()));
+        p.setOptionHeaderImage(this.requestCode);
         long idNew = ProjectController.getInstance().create(this.mainActivity, p);
 
         if (idNew > 0) {
@@ -271,5 +270,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         this.projectName.setText("");
         this.projectNeedleNum.setText("");
         this.image_thumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
+        this.requestCode = 0;
     }
 }

@@ -13,16 +13,20 @@ import static com.olivadevelop.knittingcounter.model.Project.COL_ID;
 import static com.olivadevelop.knittingcounter.model.Project.COL_LAP;
 import static com.olivadevelop.knittingcounter.model.Project.COL_NAME;
 import static com.olivadevelop.knittingcounter.model.Project.COL_NEEDLE_NUM;
+import static com.olivadevelop.knittingcounter.model.Project.COL_OPTION_HEADER_IMG;
 
 public class ProjectController {
 
-    private final static ProjectController instance = new ProjectController();
+    public static int TAKE_PICTURE = 1;
+    public static int SELECT_PICTURE = 2;
 
-    private static final String[] SELECT_ALL_FIELDS = {COL_ID, COL_NAME, COL_CREATION_DATE, COL_LAP, COL_NEEDLE_NUM, COL_HEADER_IMG_URI};
+    private final static ProjectController instance = new ProjectController();
 
     public static ProjectController getInstance() {
         return instance;
     }
+
+    private static final String[] SELECT_ALL_FIELDS = {COL_ID, COL_NAME, COL_CREATION_DATE, COL_LAP, COL_NEEDLE_NUM, COL_HEADER_IMG_URI, COL_OPTION_HEADER_IMG};
 
     public Cursor findAll(Context c) {
         ManageDatabase md = new ManageDatabase(c, true);
@@ -38,8 +42,7 @@ public class ProjectController {
 
     public Project find(Context c, String whereClause, String[] whereArgs) {
         ManageDatabase md = new ManageDatabase(c, true);
-        Cursor cursor = md.select(ManageDatabase.TABLE_PROJECTS, SELECT_ALL_FIELDS, null, whereClause, whereArgs
-        );
+        Cursor cursor = md.select(ManageDatabase.TABLE_PROJECTS, SELECT_ALL_FIELDS, null, whereClause, whereArgs);
         Project projectSelected = buildProjectFromCursor(cursor);
         md.closeDB();
         return projectSelected;
@@ -80,6 +83,7 @@ public class ProjectController {
             int colLap = cursor.getColumnIndex(COL_LAP);
             int colNeedle = cursor.getColumnIndex(COL_NEEDLE_NUM);
             int colHeaderImg = cursor.getColumnIndex(COL_HEADER_IMG_URI);
+            int colOptionHeaderImg = cursor.getColumnIndex(COL_OPTION_HEADER_IMG);
 
             projectSelected = new Project();
             if (colID > -1) {
@@ -99,6 +103,9 @@ public class ProjectController {
             }
             if (colHeaderImg > -1) {
                 projectSelected.setHeaderImgUri(cursor.getString(colHeaderImg));
+            }
+            if (colOptionHeaderImg > -1) {
+                projectSelected.setOptionHeaderImage(cursor.getInt(colOptionHeaderImg));
             }
         }
         return projectSelected;

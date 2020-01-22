@@ -27,6 +27,7 @@ import com.olivadevelop.knittingcounter.model.Project;
 import java.io.File;
 
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
+import static com.olivadevelop.knittingcounter.db.ProjectController.SELECT_PICTURE;
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
 
@@ -135,14 +136,14 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private void _deleteProject() {
         try {
             // Remove header img
-            if (this.projectSelected.getHeaderImgUri() != null) {
+            if (this.projectSelected.getHeaderImgUri() != null && this.projectSelected.getOptionHeaderImage() == SELECT_PICTURE) {
                 File file = new File(this.projectSelected.getHeaderImgUri());
-                if (file.exists() && file.delete()) {
-                    deleteProjectData();
+                if (file.exists()) {
+                    file.delete();
                 }
-            } else {
-                deleteProjectData();
             }
+            ProjectController.getInstance().delete(this.mainActivity, this.projectSelected);
+            Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_home);
         } catch (Exception e) {
             this.mainActivity.customSnackBar(this.root, R.string.error_delete_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override
@@ -151,11 +152,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 }
             }).show();
         }
-    }
-
-    private void deleteProjectData() {
-        ProjectController.getInstance().delete(this.mainActivity, this.projectSelected);
-        Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_home);
     }
 
     private void deleteProject() {
