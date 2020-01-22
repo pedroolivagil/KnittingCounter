@@ -1,4 +1,4 @@
-package com.olivadevelop.knittingcounter.ui.gallery;
+package com.olivadevelop.knittingcounter.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

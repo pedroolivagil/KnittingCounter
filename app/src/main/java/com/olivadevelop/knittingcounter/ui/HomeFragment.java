@@ -1,4 +1,4 @@
-package com.olivadevelop.knittingcounter.ui.home;
+package com.olivadevelop.knittingcounter.ui;
 
 import android.database.Cursor;
 import android.os.Bundle;

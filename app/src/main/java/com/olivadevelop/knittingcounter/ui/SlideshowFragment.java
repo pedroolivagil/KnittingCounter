@@ -1,4 +1,4 @@
-package com.olivadevelop.knittingcounter.ui.slideshow;
+package com.olivadevelop.knittingcounter.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -270,9 +270,10 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
         if (idNew > 0) {
             resetForm();
-            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
+            this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
+            Tools.executeInThread(this.mainActivity, 2500, new Runnable() {
                 @Override
-                public void onClick(View v) {
+                public void run() {
                     Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
                 }
             });
@@ -283,9 +284,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                     createProject();
                 }
             });
+            this.customSnackbar.show();
+            this.mainActivity.setCustomSnackbar(this.customSnackbar);
         }
-        this.customSnackbar.show();
-        this.mainActivity.setCustomSnackbar(this.customSnackbar);
     }
 
     private void resetForm() {

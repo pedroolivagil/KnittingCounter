@@ -1,10 +1,10 @@
 package com.olivadevelop.knittingcounter.tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.R;
 
-import java.io.File;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -61,5 +59,25 @@ public abstract class Tools {
 
     public static boolean isNotEmpty(String text) {
         return text != null && !text.trim().isEmpty();
+    }
+
+    public static void executeInThread(final Activity a, final int timeMillis, final Runnable action) {
+        Thread splashThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    int waited = 0;
+                    while ((waited < timeMillis)) {
+                        sleep(100);
+                        waited += 100;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    a.runOnUiThread(action);
+                }
+            }
+        };
+        splashThread.start();
     }
 }
