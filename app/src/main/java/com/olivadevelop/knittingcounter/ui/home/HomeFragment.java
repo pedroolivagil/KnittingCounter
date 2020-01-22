@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void findProjects() {
-        Cursor items = ProjectController.getInstance().findAllProject(this.mainActivity);
+        Cursor items = ProjectController.getInstance().findAll(this.mainActivity);
         if (items.getCount() == 0) {
             createDefault();
         }
@@ -109,6 +109,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         p.setName(getString(R.string.default_project_name));
         p.setNeedleNum(4.5f);
         p.setLap(34);
-        ProjectController.getInstance().createProject(this.mainActivity, p);
+        ProjectController.getInstance().create(this.mainActivity, p);
     }
 }

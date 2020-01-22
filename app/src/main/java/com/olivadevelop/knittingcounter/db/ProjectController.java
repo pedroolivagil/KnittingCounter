@@ -1,5 +1,6 @@
 package com.olivadevelop.knittingcounter.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -23,19 +24,19 @@ public class ProjectController {
         return instance;
     }
 
-    public Cursor findAllProject(Context c) {
+    public Cursor findAll(Context c) {
         ManageDatabase md = new ManageDatabase(c, true);
         return md.select(ManageDatabase.TABLE_PROJECTS, SELECT_ALL_FIELDS, COL_ID + " DESC");
     }
 
-    public Project findProjectName(Context c, String projectName) {
+    public Project findByName(Context c, String projectName) {
         if (!Tools.isNotEmpty(projectName)) {
             return null;
         }
-        return findProject(c, "LOWER(" + COL_NAME + ") = ?", new String[]{projectName.trim().toLowerCase()});
+        return find(c, "LOWER(" + COL_NAME + ") = ?", new String[]{projectName.trim().toLowerCase()});
     }
 
-    public Project findProject(Context c, String whereClause, String[] whereArgs) {
+    public Project find(Context c, String whereClause, String[] whereArgs) {
         ManageDatabase md = new ManageDatabase(c, true);
         Cursor cursor = md.select(ManageDatabase.TABLE_PROJECTS, SELECT_ALL_FIELDS, null, whereClause, whereArgs
         );
@@ -44,7 +45,7 @@ public class ProjectController {
         return projectSelected;
     }
 
-    public long createProject(Context c, Project p) {
+    public long create(Context c, Project p) {
         ManageDatabase md = new ManageDatabase(c, false);
         long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,
                 new String[]{COL_NAME, COL_CREATION_DATE, COL_LAP, COL_NEEDLE_NUM, COL_HEADER_IMG_URI},
@@ -52,6 +53,22 @@ public class ProjectController {
         );
         md.closeDB();
         return idNew;
+    }
+
+    public boolean update(Context c, Project p) {
+        ContentValues cv = new ContentValues();
+        cv.put(COL_LAP, p.getLap());
+        ManageDatabase md = new ManageDatabase(c, false);
+        int affectedRows = md.update(ManageDatabase.TABLE_PROJECTS, cv, COL_ID + " = ?", new String[]{String.valueOf(p.get_id())});
+        md.closeDB();
+        return affectedRows > 0;
+    }
+
+    public boolean delete(Context c, Project p) {
+        ManageDatabase md = new ManageDatabase(c, false);
+        int affectedRows = md.delete(ManageDatabase.TABLE_PROJECTS, COL_ID + " = ?", new String[]{String.valueOf(p.get_id())});
+        md.closeDB();
+        return affectedRows > 0;
     }
 
     private Project buildProjectFromCursor(Cursor cursor) {

@@ -45,5 +45,6 @@
     <string name="error_new_project">Cannot create the project</string>
     <string name="error_new_project_already_exists">A project with that name already exists</string>
     <string name="error_permissions_new_project">Check the app\'s permissions to do this…</string>
+    <string name="error_delete_project">Error deleting the project…</string>
 
 </resources>

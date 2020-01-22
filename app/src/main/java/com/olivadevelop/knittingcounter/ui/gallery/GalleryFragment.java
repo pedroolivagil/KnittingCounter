@@ -1,7 +1,6 @@
 package com.olivadevelop.knittingcounter.ui.gallery;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import androidx.navigation.Navigation;
 
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ManageDatabase;
 import com.olivadevelop.knittingcounter.db.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 
@@ -101,7 +99,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 setupActionBarWithNavController(this.mainActivity, navController);
             }
             long idProject = getArguments().getLong("idProjectSelected");
-            this.projectSelected = ProjectController.getInstance().findProject(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
+            this.projectSelected = ProjectController.getInstance().find(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
                 TextView textView = this.root.findViewById(R.id.text_gallery);
                 textView.setText(this.projectSelected.getName());
@@ -126,12 +124,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         } else if (v == btnSubtract) {
             this.projectSelected.removeLap();
         }
-        ContentValues cv = new ContentValues();
-        cv.put("lap", this.projectSelected.getLap());
-        ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        md.update(ManageDatabase.TABLE_PROJECTS, cv, "_id = ?", new String[]{String.valueOf(this.projectSelected.get_id())});
-        md.closeDB();
-
+        ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
         updateTextCounter();
     }
 
@@ -140,22 +133,28 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     }
 
     private void _deleteProject() {
-        // Remove header img
-        if (this.projectSelected.getHeaderImgUri() != null) {
-            File file = new File(this.projectSelected.getHeaderImgUri());
-            if (file.exists() && file.delete()) {
+        try {
+            // Remove header img
+            if (this.projectSelected.getHeaderImgUri() != null) {
+                File file = new File(this.projectSelected.getHeaderImgUri());
+                if (file.exists() && file.delete()) {
+                    deleteProjectData();
+                }
+            } else {
                 deleteProjectData();
             }
-        } else {
-            deleteProjectData();
+        } catch (Exception e) {
+            this.mainActivity.customSnackBar(this.root, R.string.error_delete_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _deleteProject();
+                }
+            }).show();
         }
-        // Remove data
     }
 
     private void deleteProjectData() {
-        ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        md.delete(ManageDatabase.TABLE_PROJECTS, "_id = ?", new String[]{String.valueOf(this.projectSelected.get_id())});
-        md.closeDB();
+        ProjectController.getInstance().delete(this.mainActivity, this.projectSelected);
         Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_home);
     }
 

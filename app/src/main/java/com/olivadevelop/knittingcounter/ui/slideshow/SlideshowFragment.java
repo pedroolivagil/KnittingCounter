@@ -231,7 +231,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             }).show();
             return;
         }
-        Project pExists = ProjectController.getInstance().findProjectName(this.mainActivity, this.projectName.getText().toString());
+        Project pExists = ProjectController.getInstance().findByName(this.mainActivity, this.projectName.getText().toString());
         if (pExists != null) {
             this.mainActivity.customSnackBar(this.root, R.string.error_new_project_already_exists, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_clean, new View.OnClickListener() {
                 @Override
@@ -246,7 +246,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         p.setName(this.projectName.getText().toString());
         p.setHeaderImgUri(this.currentPhotoPath);
         p.setNeedleNum(Float.valueOf(this.projectNeedleNum.getText().toString()));
-        long idNew = ProjectController.getInstance().createProject(this.mainActivity, p);
+        long idNew = ProjectController.getInstance().create(this.mainActivity, p);
 
         if (idNew > 0) {
             resetForm();
