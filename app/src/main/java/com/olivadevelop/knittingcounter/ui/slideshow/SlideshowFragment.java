@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,14 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ManageDatabase;
+import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.PermissionsChecker;
 import com.olivadevelop.knittingcounter.tools.Tools;
 
@@ -39,7 +38,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
@@ -48,10 +46,8 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
     private static int TAKE_PICTURE = 1;
     private static int SELECT_PICTURE = 2;
-    private SlideshowViewModel slideshowViewModel;
     private MainActivity mainActivity;
     private View root;
-    private Button btnSave;
     private EditText projectName;
     private EditText projectNeedleNum;
     private LinearLayout lytBtnCamera;
@@ -82,7 +78,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.slideshowViewModel = ViewModelProviders.of(this).get(SlideshowViewModel.class);
         this.root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
         this.permissionsChecker = new PermissionsChecker(this.mainActivity);
@@ -96,7 +91,6 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             });
         }
-        this.btnSave = this.root.findViewById(R.id.action_save_project);
 
         this.projectName = this.root.findViewById(R.id.project_name);
         this.projectNeedleNum = this.root.findViewById(R.id.project_needle);
@@ -107,6 +101,9 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
         this.lytBtnCamera.setOnClickListener(this);
         this.lytBtnGallery.setOnClickListener(this);
+
+        this.permissionsChecker.checkStoragePermission();
+        this.permissionsChecker.checkCameraPermission();
 
         return this.root;
     }
@@ -125,7 +122,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         this.mainActivity.hideFabButton();
-        this.mainActivity.hideImputMedia();
+        this.mainActivity.hideImputMedia(this.root);
         this.mainActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onResume();
     }
@@ -134,7 +131,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         try {
             if (v == lytBtnCamera) {
-                this.mainActivity.hideImputMedia();
+                this.mainActivity.hideImputMedia(this.root);
                 if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePictureIntent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
@@ -149,9 +146,17 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                             startActivityForResult(takePictureIntent, TAKE_PICTURE);
                         }
                     }
+                } else {
+                    this.mainActivity.customSnackBar(this.root, R.string.error_permissions_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            permissionsChecker.checkStoragePermission();
+                            permissionsChecker.checkCameraPermission();
+                        }
+                    }).show();
                 }
             } else if (v == lytBtnGallery) {
-                this.mainActivity.hideImputMedia();
+                this.mainActivity.hideImputMedia(this.root);
                 if (this.permissionsChecker.checkStoragePermission()) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                     if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
@@ -160,9 +165,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERROR: " + e);
-            this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project,
-                    R.drawable.ic_warning_black_18dp).show();
+            this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp).show();
         }
     }
 
@@ -177,20 +180,23 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
                         File file = new File(currentPhotoPath);
                         Uri uri = Uri.fromFile(file);
                         imageBitmap = MediaStore.Images.Media.getBitmap(this.mainActivity.getContentResolver(), uri);
-                        //imageBitmap = cropAndScale(imageBitmap, 300); // if you mind scaling
                     } else {
                         imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
                     }
                     image_thumb.setImageBitmap(imageBitmap);
                 } else if (requestCode == SELECT_PICTURE) {
                     Uri selectedImage = data.getData();
-                    InputStream is;
-                    is = this.mainActivity.getContentResolver().openInputStream(selectedImage);
-                    BufferedInputStream bis = new BufferedInputStream(is);
-                    Bitmap bitmap = BitmapFactory.decodeStream(bis);
-                    ImageView iv = this.root.findViewById(R.id.image_thumb);
-                    iv.setImageBitmap(bitmap);
-                    this.currentPhotoPath = Tools.getRealPathFromURI(this.mainActivity, selectedImage);
+                    if (selectedImage != null) {
+                        InputStream is = this.mainActivity.getContentResolver().openInputStream(selectedImage);
+                        if (is != null) {
+                            BufferedInputStream bis = new BufferedInputStream(is);
+                            Bitmap bitmap = BitmapFactory.decodeStream(bis);
+                            ImageView iv = this.root.findViewById(R.id.image_thumb);
+                            iv.setImageBitmap(bitmap);
+                            this.currentPhotoPath = Tools.getRealPathFromURI(this.mainActivity, selectedImage);
+                            is.close();
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -206,7 +212,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         File storageDir = this.mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpg",    /* suffix */
                 storageDir      /* directory */
         );
         // Save a file: path for use with ACTION_VIEW intents
@@ -215,17 +221,35 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     }
 
     private void createProject() {
-        if(Tools.isNotEmpty(this.projectName.getText()) && Tools.isNotEmpty(this.projectNeedleNum.getText())){
-            this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).show();
+        this.mainActivity.hideImputMedia(this.root);
+        if (!Tools.isNotEmpty(this.projectName.getText()) && !Tools.isNotEmpty(this.projectNeedleNum.getText())) {
+            this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createProject();
+                }
+            }).show();
             return;
         }
-        ManageDatabase md = new ManageDatabase(this.getContext(), false);
-        int idTemp = md.count(ManageDatabase.TABLE_PROJECTS) + 1;
-        long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,
-                new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"},
-                new String[]{String.valueOf(idTemp), this.projectName.getText().toString(), Tools.formatDate(new Date()), String.valueOf(0d), this.projectNeedleNum.getText().toString(), this.currentPhotoPath}
-        );
+        Project pExists = ProjectController.getInstance().findProjectName(this.mainActivity, this.projectName.getText().toString());
+        if (pExists != null) {
+            this.mainActivity.customSnackBar(this.root, R.string.error_new_project_already_exists, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_clean, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    resetForm();
+                }
+            }).show();
+            return;
+        }
+
+        Project p = new Project();
+        p.setName(this.projectName.getText().toString());
+        p.setHeaderImgUri(this.currentPhotoPath);
+        p.setNeedleNum(Float.valueOf(this.projectNeedleNum.getText().toString()));
+        long idNew = ProjectController.getInstance().createProject(this.mainActivity, p);
+
         if (idNew > 0) {
+            resetForm();
             this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp).setAction(android.R.string.ok, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -236,10 +260,16 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
             this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
+                    createProject();
                 }
             }).show();
         }
-        md.closeDB();
+    }
+
+    private void resetForm() {
+        this.currentPhotoPath = null;
+        this.projectName.setText("");
+        this.projectNeedleNum.setText("");
+        this.image_thumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
     }
 }

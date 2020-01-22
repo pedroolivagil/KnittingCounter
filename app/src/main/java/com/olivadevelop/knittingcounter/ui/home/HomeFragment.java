@@ -8,30 +8,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ManageDatabase;
+import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.ProjectAdapter;
-import com.olivadevelop.knittingcounter.tools.Tools;
-
-import java.util.Date;
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    private HomeViewModel homeViewModel;
     private MainActivity mainActivity;
     private View root;
 
@@ -49,7 +43,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_save_project) {
+        if (item.getItemId() == R.id.action_update_list) {
             this.mainActivity.customSnackBar(this.root, R.string.label_updating, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_SHORT).show();
             findProjects();
         }
@@ -58,9 +52,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         this.root = inflater.inflate(R.layout.fragment_home, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
+        if (this.mainActivity != null) {
+            this.mainActivity.hideImputMedia(this.root);
+        }
 
         if (this.mainActivity != null) {
             Toolbar toolbar = this.mainActivity.findViewById(R.id.toolbar);
@@ -78,7 +74,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onResume() {
         findProjects();
-        this.mainActivity.hideImputMedia();
         this.mainActivity.showFabButton();
         this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +81,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_slideshow);
             }
         });
+        this.mainActivity.hideImputMedia(this.root);
         super.onResume();
     }
 
@@ -97,28 +93,22 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void findProjects() {
-        ManageDatabase md = new ManageDatabase(this.getContext(), true);
-        Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap", "needle_num", "header_img_uri"}, "_id DESC");
+        Cursor items = ProjectController.getInstance().findAllProject(this.mainActivity);
         if (items.getCount() == 0) {
-            createDefault(md);
+            createDefault();
         }
-        /*SimpleCursorAdapter adapter = new SimpleCursorAdapter(this.getContext(),
-                R.layout.item_project,
-                items,
-                new String[]{"name", "creation_date", "header_img_uri"},
-                new int[]{R.id.projectName, R.id.projectLastUpdate, });*/
         ProjectAdapter adapter = new ProjectAdapter(this.mainActivity, items);
 
         ListView listView = root.findViewById(R.id.projectList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-        md.closeDB();
     }
 
-    private void createDefault(ManageDatabase md) {
-        md.insert(ManageDatabase.TABLE_PROJECTS,
-                new String[]{"_id", "name", "creation_date", "lap", "needle_num"},
-                new String[]{String.valueOf(1), getString(R.string.default_project_name), Tools.formatDate(new Date()), String.valueOf(0d), String.valueOf(3d)}
-        );
+    private void createDefault() {
+        Project p = new Project();
+        p.setName(getString(R.string.default_project_name));
+        p.setNeedleNum(4.5f);
+        p.setLap(34);
+        ProjectController.getInstance().createProject(this.mainActivity, p);
     }
 }

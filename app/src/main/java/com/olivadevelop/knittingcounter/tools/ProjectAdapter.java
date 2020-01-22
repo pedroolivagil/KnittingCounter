@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.olivadevelop.knittingcounter.R;
+import com.olivadevelop.knittingcounter.model.Project;
 
 public class ProjectAdapter extends CursorAdapter {
 
@@ -31,12 +32,11 @@ public class ProjectAdapter extends CursorAdapter {
         TextView projectCounter = view.findViewById(R.id.projectCounter);
         TextView projectNeedle = view.findViewById(R.id.projectNeedle);
         if (cursor != null) {
-            int colID = cursor.getColumnIndex("_id");
-            int colName = cursor.getColumnIndex("name");
-            int colDate = cursor.getColumnIndex("creation_date");
-            int colLap = cursor.getColumnIndex("lap");
-            int colNeedle = cursor.getColumnIndex("needle_num");
-            int colHeaderImg = cursor.getColumnIndex("header_img_uri");
+            int colName = cursor.getColumnIndex(Project.COL_NAME);
+            int colDate = cursor.getColumnIndex(Project.COL_CREATION_DATE);
+            int colLap = cursor.getColumnIndex(Project.COL_LAP);
+            int colNeedle = cursor.getColumnIndex(Project.COL_NEEDLE_NUM);
+            int colHeaderImg = cursor.getColumnIndex(Project.COL_HEADER_IMG_URI);
 
             String needle = this.context.getString(R.string.label_needle) + " " + cursor.getString(colNeedle);
 
@@ -48,6 +48,9 @@ public class ProjectAdapter extends CursorAdapter {
             String uriStr = cursor.getString(colHeaderImg);
             if (uriStr != null) {
                 projectHomeImg.setImageURI(Uri.parse(uriStr));
+                projectHomeImg.setVisibility(View.VISIBLE);
+            } else {
+                projectHomeImg.setVisibility(View.INVISIBLE);
             }
         }
     }

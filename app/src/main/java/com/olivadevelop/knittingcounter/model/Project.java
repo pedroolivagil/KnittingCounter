@@ -1,13 +1,23 @@
 package com.olivadevelop.knittingcounter.model;
 
+import com.olivadevelop.knittingcounter.tools.Tools;
+
+import java.util.Date;
+
 public class Project {
+    public static final String COL_ID = "_id";
+    public static final String COL_NAME = "name";
+    public static final String COL_CREATION_DATE = "creation_date";
+    public static final String COL_LAP = "lap";
+    public static final String COL_NEEDLE_NUM = "needle_num";
+    public static final String COL_HEADER_IMG_URI = "header_img_uri";
 
     private Integer _id;
     private String name;
-    private String creation_date;
-    private Integer lap;
-    private Integer needle_num;
-    private String header_img_uri;
+    private String creationDate;
+    private Integer lap = 0;
+    private Float needleNum = 0f;
+    private String headerImgUri;
 
     public Project() {
     }
@@ -42,12 +52,15 @@ public class Project {
         this.name = name;
     }
 
-    public String getCreation_date() {
-        return creation_date;
+    public String getCreationDate() {
+        if (this.creationDate == null) {
+            this.creationDate = Tools.formatDate(new Date());
+        }
+        return creationDate;
     }
 
-    public void setCreation_date(String creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Integer getLap() {
@@ -58,19 +71,19 @@ public class Project {
         this.lap = lap;
     }
 
-    public Integer getNeedle_num() {
-        return needle_num;
+    public Float getNeedleNum() {
+        return needleNum;
     }
 
-    public void setNeedle_num(Integer needle_num) {
-        this.needle_num = needle_num;
+    public void setNeedleNum(Float needleNum) {
+        this.needleNum = needleNum;
     }
 
-    public String getHeader_img_uri() {
-        return header_img_uri;
+    public String getHeaderImgUri() {
+        return headerImgUri;
     }
 
-    public void setHeader_img_uri(String header_img_uri) {
-        this.header_img_uri = header_img_uri;
+    public void setHeaderImgUri(String headerImgUri) {
+        this.headerImgUri = headerImgUri;
     }
 }

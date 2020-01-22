@@ -18,6 +18,7 @@
     <string name="btn_amount">Amount</string>
     <string name="btn_new_project">Create</string>
     <string name="btn_retry">Retry</string>
+    <string name="btn_clean">Clean</string>
     <string name="btn_bar_save">Save</string>
     <string name="btn_bar_update">Update</string>
     <string name="btn_bar_delete">Delete</string>
@@ -27,6 +28,7 @@
     <string name="new_project_needle_placeholder">Insert the needle number</string>
 
     <string name="title_dialog_delete">Deleting…</string>
+    <string name="title_activity_splashscreen">Welcome</string>
 
     <string name="label_updating_data">Updating data</string>
     <string name="label_img_camera">Take a picture from camera</string>
@@ -41,8 +43,7 @@
 
     <string name="error_image_new_project">A problem has occurred…</string>
     <string name="error_new_project">Cannot create the project</string>
+    <string name="error_new_project_already_exists">A project with that name already exists</string>
+    <string name="error_permissions_new_project">Check the app\'s permissions to do this…</string>
 
-    <string name="title_activity_splashscreen">SplashscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

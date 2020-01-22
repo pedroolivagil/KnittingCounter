@@ -1,5 +1,7 @@
 package com.olivadevelop.knittingcounter;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -7,6 +9,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -94,14 +97,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return snackbar;
     }
 
-    public void hideImputMedia() {
+    public void hideImputMedia(View view) {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public FloatingActionButton getFab() {
         return fab;
     }
 
+    @SuppressLint("RtlHardcoded")
     public void openDrawerMenu(View v) {
         this.drawer.openDrawer(Gravity.LEFT);
     }

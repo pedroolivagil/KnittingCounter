@@ -58,4 +58,8 @@ public abstract class Tools {
     public static boolean isNotEmpty(Editable text) {
         return text != null && !text.toString().trim().isEmpty();
     }
+
+    public static boolean isNotEmpty(String text) {
+        return text != null && !text.trim().isEmpty();
+    }
 }

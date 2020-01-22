@@ -3,8 +3,6 @@ package com.olivadevelop.knittingcounter.ui.gallery;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,13 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
+import com.olivadevelop.knittingcounter.db.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 
 import java.io.File;
@@ -34,7 +32,6 @@ import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavControlle
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
 
-    private GalleryViewModel galleryViewModel;
     private MainActivity mainActivity;
     private View root;
 
@@ -65,12 +62,12 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        this.galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.root = inflater.inflate(R.layout.fragment_gallery, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
-        this.mainActivity.hideImputMedia();
+        if (this.mainActivity != null) {
+            this.mainActivity.hideImputMedia(this.root);
+        }
 
         if (this.mainActivity != null) {
             Toolbar toolbar = this.mainActivity.findViewById(R.id.toolbar);
@@ -104,21 +101,13 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 setupActionBarWithNavController(this.mainActivity, navController);
             }
             long idProject = getArguments().getLong("idProjectSelected");
-            ManageDatabase md = new ManageDatabase(this.getContext(), true);
-            Cursor items = md.select(ManageDatabase.TABLE_PROJECTS, new String[]{"_id", "name", "creation_date", "lap"}, null, "_id = ?", new String[]{String.valueOf(idProject)});
-            while (items.moveToNext() && projectSelected == null) {
-                this.projectSelected = new Project();
-                this.projectSelected.set_id(items.getInt(0));
-                this.projectSelected.setName(items.getString(1));
-                this.projectSelected.setCreation_date(items.getString(2));
-                this.projectSelected.setLap(items.getInt(3));
-            }
+            this.projectSelected = ProjectController.getInstance().findProject(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
                 TextView textView = this.root.findViewById(R.id.text_gallery);
                 textView.setText(this.projectSelected.getName());
                 updateTextCounter();
             }
-            md.closeDB();
+            //md.closeDB();
         }
     }
 
@@ -152,8 +141,8 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
     private void _deleteProject() {
         // Remove header img
-        if (this.projectSelected.getHeader_img_uri() != null) {
-            File file = new File(this.projectSelected.getHeader_img_uri());
+        if (this.projectSelected.getHeaderImgUri() != null) {
+            File file = new File(this.projectSelected.getHeaderImgUri());
             if (file.exists() && file.delete()) {
                 deleteProjectData();
             }
@@ -167,10 +156,10 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         ManageDatabase md = new ManageDatabase(this.getContext(), true);
         md.delete(ManageDatabase.TABLE_PROJECTS, "_id = ?", new String[]{String.valueOf(this.projectSelected.get_id())});
         md.closeDB();
-        Navigation.findNavController(root).navigate(R.id.action_nav_gallery_to_nav_home);
+        Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_home);
     }
 
-    public void deleteProject() {
+    private void deleteProject() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.root.getContext());
         builder.setTitle(R.string.title_dialog_delete);
         builder.setMessage(R.string.label_dialog_delete);

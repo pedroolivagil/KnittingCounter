@@ -18,6 +18,7 @@
     <string name="btn_new_project">Crear</string>
     <string name="btn_retry">Reintentar</string>
     <string name="btn_bar_save">Guardar</string>
+    <string name="btn_clean">Limpiar</string>
     <string name="btn_bar_update">Actualizar</string>
     <string name="btn_bar_delete">Eliminar</string>
 
@@ -26,6 +27,7 @@
     <string name="new_project_needle_placeholder">Ingrese el número de aguja</string>
 
     <string name="title_dialog_delete">Eliminando…</string>
+    <string name="title_activity_splashscreen">Bienvenido</string>
 
     <string name="label_updating_data">Actializando datos</string>
     <string name="label_img_camera">Tomar una foto de la cámara</string>
@@ -40,4 +42,6 @@
 
     <string name="error_image_new_project">Ha ocurrido un problema…</string>
     <string name="error_new_project">No se puede crear el proyecto</string>
+    <string name="error_new_project_already_exists">Ya existe un proyecto con ese nombre</string>
+    <string name="error_permissions_new_project">Revisa los permisos de la app para hacer esto…</string>
 </resources>
