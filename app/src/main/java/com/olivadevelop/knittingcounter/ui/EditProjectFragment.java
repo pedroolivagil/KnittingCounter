@@ -30,6 +30,7 @@ import com.olivadevelop.knittingcounter.model.Project;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
+import static com.olivadevelop.knittingcounter.model.Project.COL_ID;
 
 public class EditProjectFragment extends Fragment implements View.OnClickListener {
     private MainActivity mainActivity;
@@ -108,7 +109,7 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
         }
         if (getArguments() != null) {
             long idProject = getArguments().getLong("idProjectSelected");
-            this.projectSelected = ProjectController.getInstance().find(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
+            this.projectSelected = ProjectController.getInstance().find(this.mainActivity, COL_ID + " = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
                 this.projectName.setText(this.projectSelected.getName());
                 this.projectNeedleNum.setText(String.valueOf(this.projectSelected.getNeedleNum()));
