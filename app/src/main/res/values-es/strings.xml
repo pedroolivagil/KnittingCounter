@@ -47,4 +47,6 @@
     <string name="error_permissions_new_project">Revisa los permisos de la app para hacer esto…</string>
     <string name="error_delete_project">Error al borrar el proyecto…</string>
     <string name="title_exit_app">¿Estás seguro que quieres salir?</string>
+
+    <string name="dialog_project_home_title">Elige una acción para tu proyecto</string>
 </resources>

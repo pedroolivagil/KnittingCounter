@@ -25,8 +25,9 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
+import com.olivadevelop.knittingcounter.tools.Tools;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
@@ -108,7 +109,7 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
             setupActionBarWithNavController(this.mainActivity, navController);
         }
         if (getArguments() != null) {
-            long idProject = getArguments().getLong("idProjectSelected");
+            long idProject = getArguments().getLong(Tools.ID_PROJECT_SELECTED);
             this.projectSelected = ProjectController.getInstance().find(this.mainActivity, COL_ID + " = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
                 this.projectName.setText(this.projectSelected.getName());

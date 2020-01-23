@@ -20,11 +20,12 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.ProjectAdapter;
+import com.olivadevelop.knittingcounter.tools.ProjectHomeDialog;
 
-public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private MainActivity mainActivity;
     private View root;
@@ -93,6 +94,16 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_project, bundle);
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Project project = ProjectController.getInstance().findById(this.mainActivity, id);
+        if (project != null) {
+            new ProjectHomeDialog(this.mainActivity, this.root, project).show();
+            return true;
+        }
+        return false;
+    }
+
     private void findProjects() {
         Cursor items = ProjectController.getInstance().findAll(this.mainActivity);
         if (items.getCount() == 0) {
@@ -103,6 +114,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         ListView listView = root.findViewById(R.id.projectList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
     }
 
     private void createDefault() {

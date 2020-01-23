@@ -20,6 +20,8 @@ import java.util.UUID;
 
 public abstract class Tools {
 
+    public static final String ID_PROJECT_SELECTED = "idProjectSelected";
+
     public static Snackbar newSnackBarWithIcon(View v, Context cnxt, int string, int icon) {
         Snackbar snackbar = Snackbar.make(v, string, Snackbar.LENGTH_LONG);
         View snackbarLayout = snackbar.getView();
