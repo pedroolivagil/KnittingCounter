@@ -1,9 +1,10 @@
-package com.olivadevelop.knittingcounter.db;
+package com.olivadevelop.knittingcounter.db.controllers;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.olivadevelop.knittingcounter.db.ManageDatabase;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.Tools;
 
@@ -38,6 +39,13 @@ public class ProjectController {
             return null;
         }
         return find(c, "LOWER(" + COL_NAME + ") = ?", new String[]{projectName.trim().toLowerCase()});
+    }
+
+    public Project findById(Context c, long projectId) {
+        if (projectId < 1) {
+            return null;
+        }
+        return find(c, COL_ID + " = ?", new String[]{String.valueOf(projectId)});
     }
 
     public Project find(Context c, String whereClause, String[] whereArgs) {

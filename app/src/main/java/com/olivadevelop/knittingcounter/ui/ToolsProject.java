@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.tools.PermissionsChecker;
 import com.olivadevelop.knittingcounter.tools.Tools;
 

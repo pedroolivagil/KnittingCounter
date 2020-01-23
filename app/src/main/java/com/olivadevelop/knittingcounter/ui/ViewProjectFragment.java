@@ -21,13 +21,13 @@ import androidx.navigation.Navigation;
 
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 
 import java.io.File;
 
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
-import static com.olivadevelop.knittingcounter.db.ProjectController.SELECT_PICTURE;
+import static com.olivadevelop.knittingcounter.db.controllers.ProjectController.SELECT_PICTURE;
 
 public class ViewProjectFragment extends Fragment implements View.OnClickListener {
 

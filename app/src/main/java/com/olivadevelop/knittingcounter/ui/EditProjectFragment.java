@@ -25,7 +25,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.ProjectController;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 
 import static android.app.Activity.RESULT_OK;
