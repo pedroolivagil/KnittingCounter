@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_slideshow);
+                Navigation.findNavController(root).navigate(R.id.action_nav_home_to_nav_new_project);
             }
         });
         this.mainActivity.hideImputMedia(this.root);
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Bundle bundle = new Bundle();
         bundle.putLong("idProjectSelected", id);
-        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_gallery, bundle);
+        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_project, bundle);
     }
 
     private void findProjects() {

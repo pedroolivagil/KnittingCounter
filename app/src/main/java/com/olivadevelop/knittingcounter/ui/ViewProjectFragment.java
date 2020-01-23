@@ -61,7 +61,7 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
             case R.id.action_edit_project:
                 Bundle bundle = new Bundle();
                 bundle.putLong("idProjectSelected", this.projectSelected.get_id());
-                Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_share, bundle);
+                Navigation.findNavController(this.root).navigate(R.id.action_nav_project_to_nav_edit_project, bundle);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -150,7 +150,7 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
                 }
             }
             ProjectController.getInstance().delete(this.mainActivity, this.projectSelected);
-            Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_home);
+            Navigation.findNavController(this.root).navigate(R.id.action_nav_project_to_nav_home);
         } catch (Exception e) {
             this.mainActivity.customSnackBar(this.root, R.string.error_delete_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
                 @Override

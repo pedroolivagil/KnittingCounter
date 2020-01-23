@@ -2,11 +2,7 @@ package com.olivadevelop.knittingcounter.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,24 +17,16 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
-import com.olivadevelop.knittingcounter.tools.PermissionsChecker;
 import com.olivadevelop.knittingcounter.tools.Tools;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
@@ -51,11 +39,11 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
     private EditText projectNeedleNum;
     private LinearLayout lytBtnCamera;
     private LinearLayout lytBtnGallery;
-    private ImageView image_thumb;
+    private ImageView imageThumb;
 
     private int requestCode = 0;
-    private String currentPhotoPath;
-    private PermissionsChecker permissionsChecker;
+    //    private String currentPhotoPath;
+    private ToolsProject tools;
 
     private Snackbar customSnackbar;
 
@@ -83,8 +71,6 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.root = inflater.inflate(R.layout.fragment_new_project, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
-        this.permissionsChecker = new PermissionsChecker(this.mainActivity);
-
         if (this.mainActivity != null) {
             Toolbar toolbar = this.mainActivity.findViewById(R.id.toolbar);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -95,6 +81,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
                 }
             });
             this.mainActivity.setCurrentFragment(this);
+            this.tools = new ToolsProject(this, this.root);
         }
 
         this.projectName = this.root.findViewById(R.id.project_name);
@@ -102,13 +89,10 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
 
         this.lytBtnCamera = this.root.findViewById(R.id.btnCamera);
         this.lytBtnGallery = this.root.findViewById(R.id.btnGalery);
-        this.image_thumb = this.root.findViewById(R.id.image_thumb);
+        this.imageThumb = this.root.findViewById(R.id.image_thumb);
 
         this.lytBtnCamera.setOnClickListener(this);
         this.lytBtnGallery.setOnClickListener(this);
-
-        this.permissionsChecker.checkStoragePermission();
-        this.permissionsChecker.checkCameraPermission();
 
         resetForm();
 
@@ -141,40 +125,9 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         try {
             if (v == lytBtnCamera) {
-                this.mainActivity.hideImputMedia(this.root);
-                if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (takePictureIntent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                        File photoFile = createImageFile();
-                        // Continue only if the File was successfully created
-                        if (photoFile != null) {
-                            Uri photoURI = FileProvider.getUriForFile(this.root.getContext(),
-                                    BuildConfig.APPLICATION_ID + ".provider",
-                                    photoFile
-                            );
-                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(takePictureIntent, ProjectController.TAKE_PICTURE);
-                        }
-                    }
-                } else {
-                    this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_permissions_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            permissionsChecker.checkStoragePermission();
-                            permissionsChecker.checkCameraPermission();
-                        }
-                    });
-                    this.customSnackbar.show();
-                    this.mainActivity.setCustomSnackbar(this.customSnackbar);
-                }
+                this.tools.takePhotoFromCamera(this.projectName.getText().toString());
             } else if (v == lytBtnGallery) {
-                this.mainActivity.hideImputMedia(this.root);
-                if (this.permissionsChecker.checkStoragePermission()) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                    if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                        startActivityForResult(intent, ProjectController.SELECT_PICTURE);
-                    }
-                }
+                this.tools.takePhotoFromGallery();
             }
         } catch (Exception e) {
             this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp);
@@ -183,35 +136,20 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             this.requestCode = requestCode;
             try {
+                Bitmap bitmap = null;
                 if (requestCode == ProjectController.TAKE_PICTURE) {
-                    Bundle extras = data.getExtras();
-                    Bitmap imageBitmap;
-                    if (extras == null) {
-                        File file = new File(currentPhotoPath);
-                        Uri uri = Uri.fromFile(file);
-                        imageBitmap = MediaStore.Images.Media.getBitmap(this.mainActivity.getContentResolver(), uri);
-                    } else {
-                        imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
-                    }
-                    this.image_thumb.setImageBitmap(imageBitmap);
+                    bitmap = this.tools.resultFromTakePhotoFromCamera(data);
                 } else if (requestCode == ProjectController.SELECT_PICTURE) {
-                    Uri selectedImage = data.getData();
-                    if (selectedImage != null) {
-                        InputStream is = this.mainActivity.getContentResolver().openInputStream(selectedImage);
-                        if (is != null) {
-                            BufferedInputStream bis = new BufferedInputStream(is);
-                            Bitmap bitmap = BitmapFactory.decodeStream(bis);
-                            ImageView iv = this.root.findViewById(R.id.image_thumb);
-                            iv.setImageBitmap(bitmap);
-                            this.currentPhotoPath = Tools.getRealPathFromURI(this.mainActivity, selectedImage);
-                            is.close();
-                        }
-                    }
+                    bitmap = this.tools.resultFromTakePhotoFromGallery(data);
+                }
+                if (bitmap != null) {
+                    this.imageThumb.setImageBitmap(bitmap);
                 }
             } catch (Exception e) {
                 this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp);
@@ -221,18 +159,12 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String imageFileName = "header_" + this.projectName.getText();
-        File storageDir = this.mainActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",    /* suffix */
-                storageDir      /* directory */
-        );
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+    private void resetForm() {
+        this.tools.setCurrentPhotoPath(null);
+        this.projectName.setText("");
+        this.projectNeedleNum.setText("0");
+        this.imageThumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
+        this.requestCode = 0;
     }
 
     private void createProject() {
@@ -263,7 +195,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
 
         Project p = new Project();
         p.setName(this.projectName.getText().toString());
-        p.setHeaderImgUri(this.currentPhotoPath);
+        p.setHeaderImgUri(this.tools.getCurrentPhotoPath());
         p.setNeedleNum(Float.valueOf(this.projectNeedleNum.getText().toString()));
         p.setOptionHeaderImage(this.requestCode);
         long idNew = ProjectController.getInstance().create(this.mainActivity, p);
@@ -274,7 +206,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
             Tools.executeInThread(this.mainActivity, 2500f, new Runnable() {
                 @Override
                 public void run() {
-                    Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
+                    Navigation.findNavController(root).navigate(R.id.action_nav_new_project_to_nav_home);
                 }
             });
         } else {
@@ -287,13 +219,5 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
             this.customSnackbar.show();
             this.mainActivity.setCustomSnackbar(this.customSnackbar);
         }
-    }
-
-    private void resetForm() {
-        this.currentPhotoPath = null;
-        this.projectName.setText("");
-        this.projectNeedleNum.setText("0");
-        this.image_thumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
-        this.requestCode = 0;
     }
 }

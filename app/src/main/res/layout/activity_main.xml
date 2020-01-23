@@ -21,6 +21,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer"
-        android:theme="@style/AppTheme.NavigationDrawer"/>
+        android:theme="@style/AppTheme.NavigationDrawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

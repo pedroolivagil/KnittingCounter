@@ -8,26 +8,17 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.olivadevelop.knittingcounter.ui.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home">
+        android:label="@string/menu_home" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
-            app:destination="@id/nav_gallery"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_home_to_nav_project"
+            app:destination="@id/nav_project" />
         <action
-            android:id="@+id/action_nav_home_to_nav_slideshow"
-            app:destination="@id/nav_slideshow"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_home_to_nav_new_project"
+            app:destination="@id/nav_new_project" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_project"
         android:name="com.olivadevelop.knittingcounter.ui.ViewProjectFragment"
         android:label="@string/menu_view_project"
         tools:layout="@layout/fragment_project">
@@ -36,35 +27,21 @@
             app:argType="long"
             android:defaultValue="0L" />
         <action
-            android:id="@+id/action_nav_gallery_to_nav_home"
-            app:destination="@id/nav_home"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/nav_home"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_nav_project_to_nav_home"
+            app:destination="@id/nav_home" />
         <action
-            android:id="@+id/action_nav_gallery_to_nav_share"
-            app:destination="@id/nav_share"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_project_to_nav_edit_project"
+            app:destination="@id/nav_edit_project" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_slideshow"
+        android:id="@+id/nav_new_project"
         android:name="com.olivadevelop.knittingcounter.ui.NewProjectFragment"
         android:label="@string/menu_new_project"
         tools:layout="@layout/fragment_new_project">
         <action
-            android:id="@+id/action_nav_slideshow_to_nav_home"
-            app:destination="@id/nav_home"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_new_project_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
 
     <fragment
@@ -74,17 +51,13 @@
         tools:layout="@layout/fragment_tools" />
 
     <fragment
-        android:id="@+id/nav_share"
+        android:id="@+id/nav_edit_project"
         android:name="com.olivadevelop.knittingcounter.ui.EditProjectFragment"
         android:label="@string/menu_edit_project"
-        tools:layout="@layout/fragment_share" >
+        tools:layout="@layout/fragment_new_project">
         <action
-            android:id="@+id/action_nav_share_to_nav_gallery"
-            app:destination="@id/nav_gallery"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_nav_edit_project_to_nav_project"
+            app:destination="@id/nav_project" />
     </fragment>
 
     <fragment
