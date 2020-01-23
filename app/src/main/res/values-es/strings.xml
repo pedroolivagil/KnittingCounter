@@ -5,10 +5,10 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_home">Proyectos</string>
-    <string name="menu_gallery">Proyecto</string>
-    <string name="menu_slideshow">Nuevo proyecto</string>
+    <string name="menu_view_project">Proyecto</string>
+    <string name="menu_new_project">Nuevo proyecto</string>
     <string name="menu_tools">Herramientas</string>
-    <string name="menu_share">Compartir</string>
+    <string name="menu_edit_project">Compartir</string>
     <string name="menu_send">Enviar</string>
 
     <string name="action_settings">Configuraciones</string>
@@ -21,6 +21,7 @@
     <string name="btn_clean">Limpiar</string>
     <string name="btn_bar_update">Actualizar</string>
     <string name="btn_bar_delete">Eliminar</string>
+    <string name="btn_bar_edit">Editar</string>
 
     <string name="new_project_name">Proyecto</string>
     <string name="new_project_name_placeholder">Ingrese el nombre del proyecto</string>

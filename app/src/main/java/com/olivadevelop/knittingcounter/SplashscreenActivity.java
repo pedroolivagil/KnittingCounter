@@ -8,9 +8,10 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.olivadevelop.knittingcounter.tools.Tools;
+
 public class SplashscreenActivity extends AppCompatActivity {
 
-    protected boolean active = true;
     protected float segundos = 2.5f;
     protected float splashTime = segundos * 1000;
 
@@ -27,29 +28,12 @@ public class SplashscreenActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        loadMainActivity();
-    }
-
-    private void loadMainActivity() {
-        Thread splashThread = new Thread() {
+        Tools.executeInThread(this, splashTime, new Runnable() {
             @Override
             public void run() {
-                try {
-                    int waited = 0;
-                    while (active && (waited < splashTime)) {
-                        sleep(100);
-                        if (active) {
-                            waited += 100;
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    startActivity(new Intent(SplashscreenActivity.this, MainActivity.class));
-                    finish();
-                }
+                startActivity(new Intent(SplashscreenActivity.this, MainActivity.class));
+                finish();
             }
-        };
-        splashThread.start();
+        });
     }
 }

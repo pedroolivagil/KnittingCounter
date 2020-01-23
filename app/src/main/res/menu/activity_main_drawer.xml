@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_library_add_black_24dp"
-            android:title="@string/menu_slideshow" />
+            android:title="@string/menu_new_project" />
     </group>
 
     <!--<item android:title="Communicate">

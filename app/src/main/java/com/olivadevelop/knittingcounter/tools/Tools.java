@@ -61,7 +61,7 @@ public abstract class Tools {
         return text != null && !text.trim().isEmpty();
     }
 
-    public static void executeInThread(final Activity a, final int timeMillis, final Runnable action) {
+    public static void executeInThread(final Activity a, final float timeMillis, final Runnable action) {
         Thread splashThread = new Thread() {
             @Override
             public void run() {

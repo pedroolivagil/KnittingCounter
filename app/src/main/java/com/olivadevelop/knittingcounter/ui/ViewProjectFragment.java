@@ -29,7 +29,7 @@ import java.io.File;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 import static com.olivadevelop.knittingcounter.db.ProjectController.SELECT_PICTURE;
 
-public class GalleryFragment extends Fragment implements View.OnClickListener {
+public class ViewProjectFragment extends Fragment implements View.OnClickListener {
 
     private MainActivity mainActivity;
     private View root;
@@ -54,15 +54,23 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_delete_project) {
-            deleteProject();
+        switch (item.getItemId()) {
+            case R.id.action_delete_project:
+                deleteProject();
+                return true;
+            case R.id.action_edit_project:
+                Bundle bundle = new Bundle();
+                bundle.putLong("idProjectSelected", this.projectSelected.get_id());
+                Navigation.findNavController(this.root).navigate(R.id.action_nav_gallery_to_nav_share, bundle);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        this.root = inflater.inflate(R.layout.fragment_project, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
         if (this.mainActivity != null) {
             this.mainActivity.hideImputMedia(this.root);
@@ -93,13 +101,12 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (this.mainActivity != null) {
+            NavController navController = Navigation.findNavController(view);
+            // Set up the ActionBar to stay in sync with the NavController
+            setupActionBarWithNavController(this.mainActivity, navController);
+        }
         if (getArguments() != null) {
-            // Get the NavController for your NavHostFragment
-            if (this.mainActivity != null) {
-                NavController navController = Navigation.findNavController(view);
-                // Set up the ActionBar to stay in sync with the NavController
-                setupActionBarWithNavController(this.mainActivity, navController);
-            }
             long idProject = getArguments().getLong("idProjectSelected");
             this.projectSelected = ProjectController.getInstance().find(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
@@ -107,7 +114,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 textView.setText(this.projectSelected.getName());
                 updateTextCounter();
             }
-            //md.closeDB();
         }
     }
 

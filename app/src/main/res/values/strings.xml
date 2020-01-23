@@ -6,10 +6,10 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_home">Projects</string>
-    <string name="menu_gallery">Project</string>
-    <string name="menu_slideshow">New project</string>
+    <string name="menu_view_project">Project</string>
+    <string name="menu_new_project">New project</string>
+    <string name="menu_edit_project">Edit project</string>
     <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
     <string name="action_settings">Settings</string>
@@ -22,6 +22,7 @@
     <string name="btn_bar_save">Save</string>
     <string name="btn_bar_update">Update</string>
     <string name="btn_bar_delete">Delete</string>
+    <string name="btn_bar_edit">Edit</string>
 
     <string name="new_project_name">Project</string>
     <string name="new_project_name_placeholder">Enter the name of the project</string>

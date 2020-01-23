@@ -43,7 +43,7 @@ import java.io.InputStream;
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 
-public class SlideshowFragment extends Fragment implements View.OnClickListener {
+public class NewProjectFragment extends Fragment implements View.OnClickListener {
 
     private MainActivity mainActivity;
     private View root;
@@ -81,7 +81,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.root = inflater.inflate(R.layout.fragment_slideshow, container, false);
+        this.root = inflater.inflate(R.layout.fragment_new_project, container, false);
         this.mainActivity = (MainActivity) this.getActivity();
         this.permissionsChecker = new PermissionsChecker(this.mainActivity);
 
@@ -271,7 +271,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
         if (idNew > 0) {
             resetForm();
             this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
-            Tools.executeInThread(this.mainActivity, 2500, new Runnable() {
+            Tools.executeInThread(this.mainActivity, 2500f, new Runnable() {
                 @Override
                 public void run() {
                     Navigation.findNavController(root).navigate(R.id.action_nav_slideshow_to_nav_home);
