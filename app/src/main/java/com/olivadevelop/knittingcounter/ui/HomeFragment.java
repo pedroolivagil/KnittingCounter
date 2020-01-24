@@ -98,17 +98,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Project project = ProjectController.getInstance().findById(this.mainActivity, id);
         if (project != null) {
-            new ProjectHomeDialog(this.mainActivity, this.root, project).show();
+            new ProjectHomeDialog(this, project).show();
             return true;
         }
         return false;
     }
 
-    private void findProjects() {
+    public void findProjects() {
         Cursor items = ProjectController.getInstance().findAll(this.mainActivity);
-        if (items.getCount() == 0) {
-            createDefault();
-        }
         ProjectAdapter adapter = new ProjectAdapter(this.mainActivity, items);
 
         ListView listView = root.findViewById(R.id.projectList);
@@ -117,11 +114,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         listView.setOnItemLongClickListener(this);
     }
 
-    private void createDefault() {
-        Project p = new Project();
-        p.setName(getString(R.string.default_project_name));
-        p.setNeedleNum(4.5f);
-        p.setLap(34);
-        ProjectController.getInstance().create(this.mainActivity, p);
+    public View getRoot() {
+        return root;
     }
 }

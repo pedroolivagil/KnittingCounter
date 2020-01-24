@@ -1,31 +1,34 @@
 package com.olivadevelop.knittingcounter.tools;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
+import com.olivadevelop.knittingcounter.ui.HomeFragment;
 
 public class ProjectHomeDialog extends Dialog implements View.OnClickListener {
 
+    private HomeFragment fragment;
     private final View view;
     private Project project;
 
     private Button btnEdit;
     private Button btnDelete;
 
-    public ProjectHomeDialog(Activity context, View view, Project project) {
-        super(context, true, null);
+    public ProjectHomeDialog(@NonNull Fragment fragment, @NonNull Project project) {
+        super(fragment.getActivity(), true, null);
+        this.fragment = (HomeFragment) fragment;
         this.project = project;
-        this.view = view;
+        this.view = this.fragment.getRoot();
     }
 
     @Override
@@ -33,12 +36,6 @@ public class ProjectHomeDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.project_home_dialog);
-
-
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-//        layoutParams.x = -200; // left margin
-        layoutParams.horizontalMargin = -200;
-        getWindow().setAttributes(layoutParams);
 
         this.btnEdit = findViewById(R.id.project_home_dialog_btn_edit);
         this.btnDelete = findViewById(R.id.project_home_dialog_btn_delete);
@@ -51,6 +48,7 @@ public class ProjectHomeDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         if (v == this.btnDelete) {
             ProjectController.getInstance().delete(getContext(), this.project);
+            this.fragment.findProjects();
         } else if (v == btnEdit) {
             Bundle bundle = new Bundle();
             bundle.putLong("idProjectSelected", this.project.get_id());

@@ -63,7 +63,7 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_save_project) {
-//            editProject();
+            editProject();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -166,6 +166,19 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
                 this.customSnackbar.show();
                 this.mainActivity.setCustomSnackbar(this.customSnackbar);
             }
+        }
+    }
+
+    private void editProject() {
+        boolean result = ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
+        if (result) {
+            this.mainActivity.customSnackBar(this.root, R.string.label_update_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
+            Tools.timerExecute(this.mainActivity, 2500f, new Runnable() {
+                @Override
+                public void run() {
+                    Navigation.findNavController(root).navigate(R.id.action_nav_edit_project_to_nav_project);
+                }
+            });
         }
     }
 }

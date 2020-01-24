@@ -40,9 +40,7 @@ public class ProjectAdapter extends CursorAdapter {
 
             String needle = this.context.getString(R.string.label_needle) + " " + cursor.getString(colNeedle);
 
-            String tempName = cursor.getString(colName) + " (" + cursor.getInt(cursor.getColumnIndex(Project.COL_ID)) + ")";
-            projectName.setText(tempName);
-//            projectName.setText(cursor.getString(colName));
+            projectName.setText(cursor.getString(colName));
             projectLastUpdate.setText(cursor.getString(colDate));
             projectCounter.setText(cursor.getString(colLap));
             projectNeedle.setText(needle);

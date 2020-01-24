@@ -95,6 +95,7 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
         this.btnReset.setOnClickListener(this);
         this.btnAmount.setOnClickListener(this);
         this.btnSubtract.setOnClickListener(this);
+
         return this.root;
     }
 
@@ -132,8 +133,10 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
         } else if (v == btnSubtract) {
             this.projectSelected.removeLap();
         }
-        ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
-        updateTextCounter();
+        boolean result = ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
+        if (result) {
+            updateTextCounter();
+        }
     }
 
     private void updateTextCounter() {

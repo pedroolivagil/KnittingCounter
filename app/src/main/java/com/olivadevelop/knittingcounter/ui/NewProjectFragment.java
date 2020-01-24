@@ -203,7 +203,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
         if (idNew > 0) {
             resetForm();
             this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
-            Tools.executeInThread(this.mainActivity, 2500f, new Runnable() {
+            Tools.timerExecute(this.mainActivity, 2500f, new Runnable() {
                 @Override
                 public void run() {
                     Navigation.findNavController(root).navigate(R.id.action_nav_new_project_to_nav_home);

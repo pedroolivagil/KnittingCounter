@@ -29,7 +29,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:cropToPadding="false"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        android:src="@drawable/ic_add_black_24dp"
+        app:maxImageSize="40dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

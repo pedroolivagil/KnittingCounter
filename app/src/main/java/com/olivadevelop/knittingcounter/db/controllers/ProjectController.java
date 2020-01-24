@@ -68,7 +68,11 @@ public class ProjectController {
 
     public boolean update(Context c, Project p) {
         ContentValues cv = new ContentValues();
+        cv.put(COL_NAME, p.getName());
+        cv.put(COL_NEEDLE_NUM, p.getNeedleNum());
         cv.put(COL_LAP, p.getLap());
+        cv.put(COL_HEADER_IMG_URI, p.getHeaderImgUri());
+        cv.put(COL_OPTION_HEADER_IMG, p.getOptionHeaderImage());
         ManageDatabase md = new ManageDatabase(c, false);
         int affectedRows = md.update(ManageDatabase.TABLE_PROJECTS, cv, COL_ID + " = ?", new String[]{String.valueOf(p.get_id())});
         md.closeDB();

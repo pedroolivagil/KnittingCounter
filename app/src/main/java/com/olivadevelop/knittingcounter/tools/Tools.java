@@ -63,8 +63,8 @@ public abstract class Tools {
         return text != null && !text.trim().isEmpty();
     }
 
-    public static void executeInThread(final Activity a, final float timeMillis, final Runnable action) {
-        Thread splashThread = new Thread() {
+    public static void timerExecute(final Activity a, final float timeMillis, final Runnable action) {
+        Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
@@ -80,6 +80,22 @@ public abstract class Tools {
                 }
             }
         };
-        splashThread.start();
+        thread.start();
+    }
+
+    public static Thread executeInThread(final Activity a, final Runnable action) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    a.runOnUiThread(action);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.setName(Tools.generateID());
+        thread.start();
+        return thread;
     }
 }
