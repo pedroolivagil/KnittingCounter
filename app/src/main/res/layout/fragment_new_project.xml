@@ -23,9 +23,9 @@
             android:layout_height="wrap_content"
             android:ems="1"
             android:hint="@string/new_project_name_placeholder"
-            android:inputType="textPersonName|textAutoComplete"
+            android:inputType="textPersonName|textCapSentences|textAutoComplete"
             android:lines="1"
-            android:maxLength="100" />
+            android:maxLength="50" />
 
         <EditText
             android:id="@+id/project_needle"
