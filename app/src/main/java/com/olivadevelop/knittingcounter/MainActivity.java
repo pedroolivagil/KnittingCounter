@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        this.drawer.openDrawer(Gravity.LEFT);
     }
 
     @Override
@@ -73,22 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (this.currentFragment != null && this.currentFragment.getClass().equals(HomeFragment.class)) {
-            AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
-            mensaje.setTitle(R.string.title_exit_app);
-            mensaje.setCancelable(false);
-            mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-            mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            mensaje.show();
+            exitApp();
         } else {
             if (this.customSnackbar != null) {
                 this.customSnackbar.dismiss();
@@ -127,6 +110,25 @@ public class MainActivity extends AppCompatActivity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void exitApp() {
+        AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
+        mensaje.setTitle(R.string.title_exit_app);
+        mensaje.setCancelable(false);
+        mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mensaje.show();
     }
 
     public FloatingActionButton getFab() {

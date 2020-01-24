@@ -22,7 +22,7 @@
     <item android:title="@string/app_name">
         <menu>
             <item
-                android:id="@+id/exit"
+                android:id="@+id/exit_app"
                 android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="@string/menu_exit" />
         </menu>
