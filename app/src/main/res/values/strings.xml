@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Projects</string>
+    <string name="menu_home">Your projects</string>
     <string name="menu_view_project">Project</string>
     <string name="menu_new_project">New project</string>
     <string name="menu_edit_project">Edit project</string>
