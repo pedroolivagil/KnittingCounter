@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
@@ -28,8 +29,10 @@ import java.io.File;
 
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 import static com.olivadevelop.knittingcounter.db.controllers.ProjectController.SELECT_PICTURE;
+import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
+import static com.olivadevelop.knittingcounter.tools.Tools.actionHoldPressView;
 
-public class ViewProjectFragment extends Fragment implements View.OnClickListener {
+public class ViewProjectFragment extends Fragment {
 
     private MainActivity mainActivity;
     private View root;
@@ -60,7 +63,7 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
                 return true;
             case R.id.action_edit_project:
                 Bundle bundle = new Bundle();
-                bundle.putLong("idProjectSelected", this.projectSelected.get_id());
+                bundle.putLong(ID_PROJECT_SELECTED, this.projectSelected.get_id());
                 Navigation.findNavController(this.root).navigate(R.id.action_nav_project_to_nav_edit_project, bundle);
                 return true;
             default:
@@ -92,11 +95,50 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
         this.btnReset = this.root.findViewById(R.id.btnReset);
         this.btnSubtract = this.root.findViewById(R.id.btnSubtract);
         this.btnAmount = this.root.findViewById(R.id.buttonAdd);
-        this.btnReset.setOnClickListener(this);
-        this.btnAmount.setOnClickListener(this);
-        this.btnSubtract.setOnClickListener(this);
+
+        actionButtonView();
 
         return this.root;
+    }
+
+    private void actionButtonView() {
+        actionHoldPressView(this.btnSubtract, new Runnable() {
+            @Override
+            public void run() {
+                projectSelected.removeLap();
+                boolean result = ProjectController.getInstance().update(mainActivity, projectSelected);
+                if (result) {
+                    updateTextCounter();
+                }
+            }
+        });
+        actionHoldPressView(this.btnAmount, new Runnable() {
+            @Override
+            public void run() {
+                projectSelected.addLap();
+                boolean result = ProjectController.getInstance().update(mainActivity, projectSelected);
+                if (result) {
+                    updateTextCounter();
+                }
+            }
+        });
+        this.btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.customSnackBar(root, R.string.label_hold_btn_reset, R.drawable.ic_info_black_18dp, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        this.btnReset.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                projectSelected.setLap(0);
+                boolean result = ProjectController.getInstance().update(mainActivity, projectSelected);
+                if (result) {
+                    updateTextCounter();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -108,8 +150,8 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
             setupActionBarWithNavController(this.mainActivity, navController);
         }
         if (getArguments() != null) {
-            long idProject = getArguments().getLong("idProjectSelected");
-            this.projectSelected = ProjectController.getInstance().find(this.mainActivity, "_id = ?", new String[]{String.valueOf(idProject)});
+            long idProject = getArguments().getLong(ID_PROJECT_SELECTED);
+            this.projectSelected = ProjectController.getInstance().findById(this.mainActivity, idProject);
             if (this.projectSelected != null) {
                 TextView textView = this.root.findViewById(R.id.text_gallery);
                 textView.setText(this.projectSelected.getName());
@@ -122,21 +164,6 @@ public class ViewProjectFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         this.mainActivity.hideFabButton();
         super.onResume();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == btnReset) {
-            this.projectSelected.setLap(0);
-        } else if (v == btnAmount) {
-            this.projectSelected.addLap();
-        } else if (v == btnSubtract) {
-            this.projectSelected.removeLap();
-        }
-        boolean result = ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
-        if (result) {
-            updateTextCounter();
-        }
     }
 
     private void updateTextCounter() {

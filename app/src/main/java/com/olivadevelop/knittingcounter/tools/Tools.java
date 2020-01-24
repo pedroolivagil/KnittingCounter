@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -97,5 +99,37 @@ public abstract class Tools {
         thread.setName(Tools.generateID());
         thread.start();
         return thread;
+    }
+
+    public static void actionHoldPressView(final View view, final Runnable task) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            private Handler mHandler;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (mHandler != null) {
+                        return true;
+                    }
+                    mHandler = new Handler();
+                    mHandler.postDelayed(mAction, 1);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (mHandler == null) {
+                        return true;
+                    }
+                    mHandler.removeCallbacks(mAction);
+                    mHandler = null;
+                }
+                return false;
+            }
+
+            Runnable mAction = new Runnable() {
+                @Override
+                public void run() {
+                    task.run();
+                    mHandler.postDelayed(this, 250);
+                }
+            };
+        });
     }
 }

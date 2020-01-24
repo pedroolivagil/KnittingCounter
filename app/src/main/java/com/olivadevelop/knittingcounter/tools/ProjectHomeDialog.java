@@ -15,6 +15,8 @@ import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.ui.HomeFragment;
 
+import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
+
 public class ProjectHomeDialog extends Dialog implements View.OnClickListener {
 
     private HomeFragment fragment;
@@ -51,7 +53,7 @@ public class ProjectHomeDialog extends Dialog implements View.OnClickListener {
             this.fragment.findProjects();
         } else if (v == btnEdit) {
             Bundle bundle = new Bundle();
-            bundle.putLong("idProjectSelected", this.project.get_id());
+            bundle.putLong(ID_PROJECT_SELECTED, this.project.get_id());
             Navigation.findNavController(this.view).navigate(R.id.action_nav_home_to_nav_edit_project, bundle);
         }
         dismiss();

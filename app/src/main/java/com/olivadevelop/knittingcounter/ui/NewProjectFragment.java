@@ -169,13 +169,8 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
 
     private void createProject() {
         this.mainActivity.hideImputMedia(this.root);
-        if (!Tools.isNotEmpty(this.projectName.getText()) && !Tools.isNotEmpty(this.projectNeedleNum.getText())) {
-            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp).setAction(R.string.btn_retry, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createProject();
-                }
-            });
+        if (!Tools.isNotEmpty(this.projectName.getText()) || !Tools.isNotEmpty(this.projectNeedleNum.getText())) {
+            this.customSnackbar = this.mainActivity.customSnackBar(this.root, R.string.error_new_project, R.drawable.ic_warning_black_18dp, Snackbar.LENGTH_LONG);
             this.customSnackbar.show();
             this.mainActivity.setCustomSnackbar(this.customSnackbar);
             return;

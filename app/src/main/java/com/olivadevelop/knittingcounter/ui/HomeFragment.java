@@ -25,6 +25,8 @@ import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.ProjectAdapter;
 import com.olivadevelop.knittingcounter.tools.ProjectHomeDialog;
 
+import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
+
 public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private MainActivity mainActivity;
@@ -90,7 +92,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Bundle bundle = new Bundle();
-        bundle.putLong("idProjectSelected", id);
+        bundle.putLong(ID_PROJECT_SELECTED, id);
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_project, bundle);
     }
 

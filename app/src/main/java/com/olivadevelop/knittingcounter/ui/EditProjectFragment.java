@@ -32,6 +32,7 @@ import com.olivadevelop.knittingcounter.tools.Tools;
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 import static com.olivadevelop.knittingcounter.model.Project.COL_ID;
+import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
 
 public class EditProjectFragment extends Fragment implements View.OnClickListener {
     private MainActivity mainActivity;
@@ -109,7 +110,7 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
             setupActionBarWithNavController(this.mainActivity, navController);
         }
         if (getArguments() != null) {
-            long idProject = getArguments().getLong(Tools.ID_PROJECT_SELECTED);
+            long idProject = getArguments().getLong(ID_PROJECT_SELECTED);
             this.projectSelected = ProjectController.getInstance().find(this.mainActivity, COL_ID + " = ?", new String[]{String.valueOf(idProject)});
             if (this.projectSelected != null) {
                 this.projectName.setText(this.projectSelected.getName());
@@ -170,13 +171,21 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
     }
 
     private void editProject() {
+        this.projectSelected.setName(this.projectName.getText().toString());
+        this.projectSelected.setNeedleNum(Float.valueOf(this.projectNeedleNum.getText().toString()));
+        if (this.requestCode > 0) {
+            this.projectSelected.setHeaderImgUri(this.tools.getCurrentPhotoPath());
+            this.projectSelected.setOptionHeaderImage(this.requestCode);
+        }
+
+        this.mainActivity.hideImputMedia(this.root);
         boolean result = ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
         if (result) {
             this.mainActivity.customSnackBar(this.root, R.string.label_update_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
             Tools.timerExecute(this.mainActivity, 2500f, new Runnable() {
                 @Override
                 public void run() {
-                    Navigation.findNavController(root).navigate(R.id.action_nav_edit_project_to_nav_project);
+                    mainActivity.onBackPressed();
                 }
             });
         }
