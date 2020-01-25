@@ -30,6 +30,7 @@
 
     <string name="title_dialog_delete">Eliminando…</string>
     <string name="title_activity_splashscreen">Bienvenido</string>
+    <string name="title_cancel_new_project">Cancelando proyecto…</string>
 
     <string name="label_updating_data">Actializando datos</string>
     <string name="label_img_camera">Tomar una foto de la cámara</string>
@@ -41,6 +42,7 @@
     <string name="label_dialog_delete">¿Estás seguro de que deseas eliminar este proyecto?</string>
     <string name="label_update_project_ok">Cambios guardados correctamente</string>
     <string name="label_hold_btn_reset">Mantenga presionado el botón para restablecer el contador del proyecto</string>
+    <string name="label_cancel_new_project">Si sales, perderás los cambios que hayas realizado. ¿Deseas continuar?</string>
 
     <string name="default_project_name">Proyecto de ejemplo</string>
 

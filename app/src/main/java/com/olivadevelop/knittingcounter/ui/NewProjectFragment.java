@@ -162,7 +162,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
     private void resetForm() {
         this.tools.setCurrentPhotoPath(null);
         this.projectName.setText("");
-        this.projectNeedleNum.setText("0");
+        this.projectNeedleNum.setText("");
         this.imageThumb.setImageDrawable(getResources().getDrawable(R.drawable.ic_crop_free_black_24dp));
         this.requestCode = 0;
     }

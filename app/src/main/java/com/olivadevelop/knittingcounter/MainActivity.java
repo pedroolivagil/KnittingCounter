@@ -9,11 +9,13 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,7 +29,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.olivadevelop.knittingcounter.ui.EditProjectFragment;
 import com.olivadevelop.knittingcounter.ui.HomeFragment;
+import com.olivadevelop.knittingcounter.ui.NewProjectFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private Snackbar customSnackbar;
-
+    private NavController navController;
     private Fragment currentFragment;
 
     @Override
@@ -53,6 +57,18 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        this.navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.exit_app) {
+                    exitApp();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -63,15 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
     public void onBackPressed() {
         if (this.currentFragment != null && this.currentFragment.getClass().equals(HomeFragment.class)) {
             exitApp();
+        } else if (this.currentFragment != null && this.currentFragment.getClass().equals(NewProjectFragment.class)) {
+            newProjectDialog();
+        } else if (this.currentFragment != null && this.currentFragment.getClass().equals(EditProjectFragment.class)) {
+            editProjectDialog();
         } else {
             if (this.customSnackbar != null) {
                 this.customSnackbar.dismiss();
@@ -120,6 +138,48 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
+            }
+        });
+        mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mensaje.show();
+    }
+
+    private void newProjectDialog() {
+        AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
+        mensaje.setTitle(R.string.title_cancel_new_project);
+        mensaje.setMessage(R.string.label_cancel_new_project);
+        mensaje.setCancelable(false);
+        mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                navController.navigate(R.id.action_nav_new_project_to_nav_home);
+            }
+        });
+        mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mensaje.show();
+    }
+
+    private void editProjectDialog() {
+        AlertDialog.Builder mensaje = new AlertDialog.Builder(this);
+        mensaje.setTitle(R.string.title_cancel_new_project);
+        mensaje.setMessage(R.string.label_cancel_new_project);
+        mensaje.setCancelable(false);
+        mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                navController.navigate(R.id.action_nav_edit_project_to_nav_project);
             }
         });
         mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

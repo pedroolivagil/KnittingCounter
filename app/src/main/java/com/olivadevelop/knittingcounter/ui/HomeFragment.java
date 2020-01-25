@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         if (this.mainActivity != null) {
             this.mainActivity.hideImputMedia(this.root);
         }
-
         if (this.mainActivity != null) {
             Toolbar toolbar = this.mainActivity.findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(R.drawable.menu);
