@@ -22,7 +22,7 @@ import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
-import com.olivadevelop.knittingcounter.tools.ProjectAdapter;
+import com.olivadevelop.knittingcounter.model.ProjectAdapter;
 import com.olivadevelop.knittingcounter.tools.ProjectHomeDialog;
 
 import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;

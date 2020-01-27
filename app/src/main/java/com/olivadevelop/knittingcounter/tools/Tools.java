@@ -22,6 +22,8 @@ import java.util.UUID;
 
 public abstract class Tools {
 
+    public static final int RESULT_CODE_FRAGMENT_OK = 1;
+    public static final int RESULT_CODE_FRAGMENT_KO = 0;
     public static final String ID_PROJECT_SELECTED = "idProjectSelected";
 
     public static Snackbar newSnackBarWithIcon(View v, Context cnxt, int string, int icon) {

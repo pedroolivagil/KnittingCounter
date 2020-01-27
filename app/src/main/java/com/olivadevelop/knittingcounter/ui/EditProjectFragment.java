@@ -182,10 +182,10 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
         boolean result = ProjectController.getInstance().update(this.mainActivity, this.projectSelected);
         if (result) {
             this.mainActivity.customSnackBar(this.root, R.string.label_update_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
-            Tools.timerExecute(this.mainActivity, 2500f, new Runnable() {
+            Tools.timerExecute(this.mainActivity, 1500f, new Runnable() {
                 @Override
                 public void run() {
-                    mainActivity.onBackPressed();
+                    mainActivity.onBackPressed(Tools.RESULT_CODE_FRAGMENT_OK);
                 }
             });
         }

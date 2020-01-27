@@ -89,7 +89,7 @@
         android:id="@+id/nav_gallery"
         android:name="com.olivadevelop.knittingcounter.ui.GalleryFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" >
+        tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_nav_gallery_to_nav_project"
             app:destination="@id/nav_project"
