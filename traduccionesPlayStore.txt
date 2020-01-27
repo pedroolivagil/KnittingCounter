@@ -1,0 +1,25 @@
+ES
+
+Crea proyectos y gestiona un contador para evitar descontarte!
+
+-
+
+Con KinttingCounter podrás crear proyectos almacenando un mínimo de información. 
+
+Estos proyectos gestionan un contador independiente para llevar la cuenta de las línes, vueltas, puntos, etc.
+
+Puedes tomar una foto para encapsular el proyecto y reconocerlo fácilmente.
+
+
+-----------------------------------
+EN
+
+Create projects and manage an accountant to avoid discounting!
+
+-
+
+With KinttingCounter you can create projects by storing a minimum of information.
+
+These projects manage an independent accountant to keep track of the lines, laps, points, etc.
+
+You can take a photo to encapsulate the project and recognize it easily.

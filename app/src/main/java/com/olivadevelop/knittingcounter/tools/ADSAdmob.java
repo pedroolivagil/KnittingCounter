@@ -15,7 +15,7 @@ public class ADSAdmob {
 
     public ADSAdmob(Activity activity) {
         this.activity = activity;
-        init();
+//        init();
     }
 
     private void init() {
