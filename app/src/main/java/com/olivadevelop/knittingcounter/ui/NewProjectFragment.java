@@ -148,6 +148,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
                 } else if (requestCode == ProjectController.SELECT_PICTURE) {
                     bitmap = this.tools.resultFromTakePhotoFromGallery(data);
                 }
+                System.err.println("Error: " + bitmap);
                 if (bitmap != null) {
                     this.imageThumb.setImageBitmap(bitmap);
                 }

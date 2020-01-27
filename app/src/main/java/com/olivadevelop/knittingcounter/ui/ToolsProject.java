@@ -3,6 +3,7 @@ package com.olivadevelop.knittingcounter.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,11 +23,13 @@ import com.olivadevelop.knittingcounter.tools.Tools;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 class ToolsProject {
 
+    private static final float THUMBNAIL_SIZE = 300;
     private PermissionsChecker permissionsChecker;
     private MainActivity mainActivity;
     private Fragment fragment;
@@ -89,7 +92,7 @@ class ToolsProject {
         if (extras == null) {
             File file = new File(this.currentPhotoPath);
             Uri uri = Uri.fromFile(file);
-            imageBitmap = MediaStore.Images.Media.getBitmap(this.mainActivity.getContentResolver(), uri);
+            imageBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.mainActivity.getContentResolver(), uri));
         } else {
             imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
         }
@@ -109,6 +112,44 @@ class ToolsProject {
             }
         }
         return bitmap;
+    }
+
+    public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
+        InputStream input = this.mainActivity.getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+        onlyBoundsOptions.inJustDecodeBounds = true;
+        onlyBoundsOptions.inDither = true;//optional
+        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//optional
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+        if (input != null) {
+            input.close();
+        }
+
+        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1)) {
+            return null;
+        }
+
+        int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+
+        double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+        bitmapOptions.inDither = true; //optional
+        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//
+        input = this.mainActivity.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+        if (input != null) {
+            input.close();
+        }
+        return bitmap;
+    }
+
+    private static int getPowerOfTwoForSampleRatio(double ratio) {
+        int k = Integer.highestOneBit((int) Math.floor(ratio));
+        if (k == 0) return 1;
+        else return k;
     }
 
     private File createImageFile(String projectName) throws IOException {

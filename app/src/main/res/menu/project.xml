@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_gallery_project"
+        android:icon="@drawable/ic_apps_black_24dp"
+        android:orderInCategory="100"
+        android:title="@string/btn_bar_gallery"
+        app:showAsAction="ifRoom|withText" />
+    <item
         android:id="@+id/action_edit_project"
         android:icon="@drawable/ic_edit_black_48dp"
         android:orderInCategory="100"

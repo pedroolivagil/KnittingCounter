@@ -32,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.ui.EditProjectFragment;
 import com.olivadevelop.knittingcounter.ui.HomeFragment;
 import com.olivadevelop.knittingcounter.ui.NewProjectFragment;
+import com.olivadevelop.knittingcounter.ui.ViewProjectFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Snackbar customSnackbar;
     private NavController navController;
     private Fragment currentFragment;
+    private Fragment beforeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +181,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                navController.navigate(R.id.action_nav_edit_project_to_nav_project);
+                if (beforeFragment != null) {
+                    if (beforeFragment.getClass().equals(ViewProjectFragment.class)) {
+                        navController.navigate(R.id.action_nav_edit_project_to_nav_project);
+                    } else {
+                        navController.navigate(R.id.action_nav_edit_project_to_nav_home);
+                    }
+                } else {
+                    navController.navigate(R.id.action_nav_edit_project_to_nav_home);
+                }
             }
         });
         mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -213,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCurrentFragment(Fragment currentFragment) {
+        this.beforeFragment = this.currentFragment;
         this.currentFragment = currentFragment;
     }
 }

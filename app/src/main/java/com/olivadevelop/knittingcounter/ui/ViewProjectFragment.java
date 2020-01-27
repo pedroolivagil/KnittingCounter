@@ -59,18 +59,26 @@ public class ViewProjectFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(ID_PROJECT_SELECTED, this.projectSelected.get_id());
+        boolean retorno;
         switch (item.getItemId()) {
             case R.id.action_delete_project:
                 deleteProject();
-                return true;
+                retorno = true;
+                break;
             case R.id.action_edit_project:
-                Bundle bundle = new Bundle();
-                bundle.putLong(ID_PROJECT_SELECTED, this.projectSelected.get_id());
                 Navigation.findNavController(this.root).navigate(R.id.action_nav_project_to_nav_edit_project, bundle);
-                return true;
+                retorno = true;
+                break;
+            case R.id.action_gallery_project:
+                Navigation.findNavController(this.root).navigate(R.id.action_nav_project_to_nav_gallery, bundle);
+                retorno = true;
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                retorno = super.onOptionsItemSelected(item);
         }
+        return retorno;
     }
 
     @Override
@@ -101,6 +109,35 @@ public class ViewProjectFragment extends Fragment {
         actionButtonView();
 
         return this.root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (this.mainActivity != null) {
+            NavController navController = Navigation.findNavController(view);
+            // Set up the ActionBar to stay in sync with the NavController
+            setupActionBarWithNavController(this.mainActivity, navController);
+        }
+        if (getArguments() != null) {
+            long idProject = getArguments().getLong(ID_PROJECT_SELECTED);
+            this.projectSelected = ProjectController.getInstance().findById(this.mainActivity, idProject);
+            if (this.projectSelected != null) {
+                TextView textView = this.root.findViewById(R.id.text_gallery);
+                textView.setText(this.projectSelected.getName());
+                if (this.projectSelected.getHeaderImgUri() != null) {
+                    ImageView imgHeader = this.root.findViewById(R.id.view_project_img_header);
+                    imgHeader.setImageURI(Uri.parse(this.projectSelected.getHeaderImgUri()));
+                }
+                updateTextCounter();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        this.mainActivity.hideFabButton();
+        super.onResume();
     }
 
     private void actionButtonView() {
@@ -141,35 +178,6 @@ public class ViewProjectFragment extends Fragment {
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (this.mainActivity != null) {
-            NavController navController = Navigation.findNavController(view);
-            // Set up the ActionBar to stay in sync with the NavController
-            setupActionBarWithNavController(this.mainActivity, navController);
-        }
-        if (getArguments() != null) {
-            long idProject = getArguments().getLong(ID_PROJECT_SELECTED);
-            this.projectSelected = ProjectController.getInstance().findById(this.mainActivity, idProject);
-            if (this.projectSelected != null) {
-                TextView textView = this.root.findViewById(R.id.text_gallery);
-                textView.setText(this.projectSelected.getName());
-                if (this.projectSelected.getHeaderImgUri() != null) {
-                    ImageView imgHeader = this.root.findViewById(R.id.view_project_img_header);
-                    imgHeader.setImageURI(Uri.parse(this.projectSelected.getHeaderImgUri()));
-                }
-                updateTextCounter();
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        this.mainActivity.hideFabButton();
-        super.onResume();
     }
 
     private void updateTextCounter() {
