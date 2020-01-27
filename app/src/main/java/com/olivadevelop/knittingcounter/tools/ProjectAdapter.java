@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.model.Project;
+import com.squareup.picasso.Picasso;
 
 public class ProjectAdapter extends CursorAdapter {
 
@@ -47,8 +48,9 @@ public class ProjectAdapter extends CursorAdapter {
 
             String uriStr = cursor.getString(colHeaderImg);
             if (uriStr != null) {
-                projectHomeImg.setImageURI(Uri.parse(uriStr));
                 projectHomeImg.setVisibility(View.VISIBLE);
+//                projectHomeImg.setImageURI(Uri.parse(uriStr));
+                Picasso.get().load(Uri.parse(uriStr)).into(projectHomeImg);
             } else {
                 projectHomeImg.setVisibility(View.INVISIBLE);
             }
