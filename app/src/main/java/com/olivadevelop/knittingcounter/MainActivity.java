@@ -29,6 +29,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.olivadevelop.knittingcounter.tools.ADSAdmob;
 import com.olivadevelop.knittingcounter.tools.Tools;
 import com.olivadevelop.knittingcounter.ui.EditProjectFragment;
 import com.olivadevelop.knittingcounter.ui.HomeFragment;
@@ -36,6 +37,8 @@ import com.olivadevelop.knittingcounter.ui.NewProjectFragment;
 import com.olivadevelop.knittingcounter.ui.ViewProjectFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ADSAdmob ads;
 
     private AppBarConfiguration mAppBarConfiguration;
     private FloatingActionButton fab;
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         this.navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         navigationDrawer(navigationView, navController);
+
+        this.ads = new ADSAdmob(this);
     }
 
     @Override
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.exit_app:
                         exitApp();
-                        drawer.closeDrawer(Gravity.RIGHT);
+                        drawer.closeDrawer(Gravity.LEFT);
                         break;
                     default:
                         return true;
@@ -166,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
         mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                ads.showInterstitialAd();
                 finish();
             }
         });
@@ -262,5 +268,9 @@ public class MainActivity extends AppCompatActivity {
     public void setCurrentFragment(Fragment currentFragment) {
         this.beforeFragment = this.currentFragment;
         this.currentFragment = currentFragment;
+    }
+
+    public ADSAdmob getAds() {
+        return ads;
     }
 }

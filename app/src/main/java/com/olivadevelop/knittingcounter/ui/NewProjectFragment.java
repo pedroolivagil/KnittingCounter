@@ -204,6 +204,7 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void run() {
                     Navigation.findNavController(root).navigate(R.id.action_nav_new_project_to_nav_home);
+                    mainActivity.getAds().showInterstitialAd();
                 }
             });
         } else {

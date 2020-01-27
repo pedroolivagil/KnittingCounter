@@ -188,6 +188,7 @@ public class EditProjectFragment extends Fragment implements View.OnClickListene
                 @Override
                 public void run() {
                     mainActivity.onBackPressed(Tools.RESULT_CODE_FRAGMENT_OK);
+                    mainActivity.getAds().showInterstitialAd();
                 }
             });
         }

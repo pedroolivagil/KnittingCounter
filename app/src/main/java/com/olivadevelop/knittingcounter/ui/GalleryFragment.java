@@ -182,6 +182,7 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
                 @Override
                 public void run() {
                     updateGridGallery();
+                    mainActivity.getAds().showInterstitialAd();
                 }
             });
         } else {
@@ -217,6 +218,7 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
             public void onClick(DialogInterface dialog, int which) {
                 GalleryController.getInstance().delete(mainActivity, image);
                 updateGridGallery();
+                mainActivity.getAds().showInterstitialAd();
             }
         });
         mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
