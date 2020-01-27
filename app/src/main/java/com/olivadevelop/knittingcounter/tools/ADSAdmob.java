@@ -15,7 +15,7 @@ public class ADSAdmob {
 
     public ADSAdmob(Activity activity) {
         this.activity = activity;
-//        init();
+        init();
     }
 
     private void init() {
@@ -42,8 +42,8 @@ public class ADSAdmob {
     }
 
     public void showInterstitialAd() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+//            mInterstitialAd.show();
         }
     }
 }
