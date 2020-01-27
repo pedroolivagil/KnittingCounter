@@ -8,6 +8,7 @@
         android:id="@+id/item_img_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:foreground="?android:attr/selectableItemBackground"
         android:minHeight="150dp"
         android:scaleType="centerInside" />
 </LinearLayout>
