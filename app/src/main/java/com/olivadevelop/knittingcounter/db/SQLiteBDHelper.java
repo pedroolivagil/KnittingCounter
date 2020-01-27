@@ -18,6 +18,14 @@ public class SQLiteBDHelper extends SQLiteOpenHelper {
             "header_img_uri TEXT," +
             "option_header_img INTEGER DEFAULT 0);";
 
+    private final String TABLE_GALLERY = "CREATE TABLE IF NOT EXISTS " + ManageDatabase.TABLE_GALLERY + "(" +
+            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "id_project INTEGER," +
+            "name TEXT NOT NULL," +
+            "creation_date TEXT NOT NULL," +
+            "img_uri TEXT," +
+            "option_create_img INTEGER DEFAULT 0);";
+
     SQLiteBDHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -25,11 +33,13 @@ public class SQLiteBDHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_RECORDS);
+        db.execSQL(TABLE_GALLERY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ManageDatabase.TABLE_PROJECTS);
+        db.execSQL("DROP TABLE IF EXISTS " + ManageDatabase.TABLE_GALLERY);
         onCreate(db);
     }
 }

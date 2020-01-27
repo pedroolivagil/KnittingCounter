@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         Cursor items = ProjectController.getInstance().findAll(this.mainActivity);
         ProjectAdapter adapter = new ProjectAdapter(this.mainActivity, items);
 
-        ListView listView = root.findViewById(R.id.projectList);
+        ListView listView = this.root.findViewById(R.id.projectList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);

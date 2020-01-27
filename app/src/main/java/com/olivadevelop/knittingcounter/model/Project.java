@@ -1,7 +1,5 @@
 package com.olivadevelop.knittingcounter.model;
 
-import androidx.annotation.NonNull;
-
 import com.olivadevelop.knittingcounter.tools.Tools;
 
 import java.util.Date;

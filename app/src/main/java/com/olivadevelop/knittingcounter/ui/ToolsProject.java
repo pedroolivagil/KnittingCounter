@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,6 +27,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 class ToolsProject {
 
@@ -92,7 +95,11 @@ class ToolsProject {
         if (extras == null) {
             File file = new File(this.currentPhotoPath);
             Uri uri = Uri.fromFile(file);
-            imageBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.mainActivity.getContentResolver(), uri));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                imageBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.mainActivity.getContentResolver(), uri));
+            } else {
+                imageBitmap = getBitmap(this.mainActivity.getContentResolver(), uri);
+            }
         } else {
             imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
         }

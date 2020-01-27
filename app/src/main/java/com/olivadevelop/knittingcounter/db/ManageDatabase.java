@@ -12,6 +12,7 @@ public class ManageDatabase {
 
     public static final String DATA_BASE = "projects_database.db";
     public static final String TABLE_PROJECTS = "projects";
+    public static final String TABLE_GALLERY = "gallery";
     public static final boolean TABLE_READ = true;
     public static final boolean TABLE_WRITE = false;
 
@@ -19,7 +20,7 @@ public class ManageDatabase {
 
     public ManageDatabase(Context ct, boolean toRead) {
         // Creamos la base de datos (Context, string, cursorFactory, int))
-        SQLiteBDHelper currentDB = new SQLiteBDHelper(ct, DATA_BASE, null, 6);
+        SQLiteBDHelper currentDB = new SQLiteBDHelper(ct, DATA_BASE, null, 8);
         if (toRead) {
             // modo lectura
             db = currentDB.getReadableDatabase();

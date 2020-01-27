@@ -2,7 +2,6 @@ package com.olivadevelop.knittingcounter.model;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.olivadevelop.knittingcounter.R;
-import com.squareup.picasso.Picasso;
+import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
+import com.olivadevelop.knittingcounter.tools.ImagePicasso;
+
+import java.io.File;
 
 public class ProjectAdapter extends CursorAdapter {
 
@@ -32,26 +34,22 @@ public class ProjectAdapter extends CursorAdapter {
         TextView projectCounter = view.findViewById(R.id.projectCounter);
         TextView projectNeedle = view.findViewById(R.id.projectNeedle);
         if (cursor != null) {
-            int colName = cursor.getColumnIndex(Project.COL_NAME);
-            int colDate = cursor.getColumnIndex(Project.COL_CREATION_DATE);
-            int colLap = cursor.getColumnIndex(Project.COL_LAP);
-            int colNeedle = cursor.getColumnIndex(Project.COL_NEEDLE_NUM);
-            int colHeaderImg = cursor.getColumnIndex(Project.COL_HEADER_IMG_URI);
+            Project p = ProjectController.getInstance().buildProjectFromCursor(cursor);
+            if (p != null) {
+                String needle = this.context.getString(R.string.label_needle) + ": " + p.getNeedleNum();
 
-            String needle = this.context.getString(R.string.label_needle) + " " + cursor.getString(colNeedle);
+                projectName.setText(p.getName());
+                projectLastUpdate.setText(p.getCreationDate());
+                projectCounter.setText(String.valueOf(p.getLap()));
+                projectNeedle.setText(needle);
 
-            projectName.setText(cursor.getString(colName));
-            projectLastUpdate.setText(cursor.getString(colDate));
-            projectCounter.setText(cursor.getString(colLap));
-            projectNeedle.setText(needle);
-
-            String uriStr = cursor.getString(colHeaderImg);
-            if (uriStr != null) {
-                projectHomeImg.setVisibility(View.VISIBLE);
-//                projectHomeImg.setImageURI(Uri.parse(uriStr));
-                Picasso.get().load(Uri.parse(uriStr)).into(projectHomeImg);
-            } else {
-                projectHomeImg.setVisibility(View.INVISIBLE);
+                String uriStr = p.getHeaderImgUri();
+                if (uriStr != null) {
+                    projectHomeImg.setVisibility(View.VISIBLE);
+                    ImagePicasso.load(new File(uriStr), projectHomeImg);
+                } else {
+                    projectHomeImg.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }

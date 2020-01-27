@@ -2,7 +2,6 @@ package com.olivadevelop.knittingcounter.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +25,7 @@ import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
+import com.olivadevelop.knittingcounter.tools.ImagePicasso;
 
 import java.io.File;
 
@@ -127,7 +127,7 @@ public class ViewProjectFragment extends Fragment {
                 textView.setText(this.projectSelected.getName());
                 if (this.projectSelected.getHeaderImgUri() != null) {
                     ImageView imgHeader = this.root.findViewById(R.id.view_project_img_header);
-                    imgHeader.setImageURI(Uri.parse(this.projectSelected.getHeaderImgUri()));
+                    ImagePicasso.load(new File(this.projectSelected.getHeaderImgUri()), imgHeader);
                 }
                 updateTextCounter();
             }

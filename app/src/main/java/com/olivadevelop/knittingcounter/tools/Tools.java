@@ -3,11 +3,13 @@ package com.olivadevelop.knittingcounter.tools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -133,5 +135,56 @@ public abstract class Tools {
                 }
             };
         });
+    }
+
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp      A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static float convertDpToPixel(Context context, float dp) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param px      A value in px (pixels) unit. Which we need to convert into db
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent dp equivalent to px value
+     */
+    public static float convertPixelsToDp(Context context, float px) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }
+
+    /**
+     * POG - Crea una cadena a partir de un número rellenandolo con un caracter al principio
+     *
+     * @param obj        Número, string,... que rellenar
+     * @param beforeChar Carácter que se insertará
+     * @param maxLength  Máximo de largo que tendrá para insertar el beforeChar
+     * @return String
+     */
+    public static String fillStringByBeforeChar(Object obj, String beforeChar, Integer maxLength) {
+        if (obj == null) {
+            return "";
+        }
+        StringBuilder retorno = new StringBuilder();
+        retorno.append(obj);
+        if (retorno.length() < Math.abs(maxLength)) {
+            do {
+                retorno.insert(0, beforeChar);
+            } while (retorno.length() < Math.abs(maxLength));
+        }
+        return retorno.toString();
     }
 }

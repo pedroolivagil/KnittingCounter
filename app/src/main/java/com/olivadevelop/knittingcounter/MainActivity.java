@@ -228,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
     private void editProjectNavigate() {
         if (beforeFragment != null) {
             if (beforeFragment.getClass().equals(ViewProjectFragment.class)) {
-                navController.navigate(R.id.action_nav_edit_project_to_nav_project);
+//                navController.navigate(R.id.action_nav_edit_project_to_nav_project);
+                super.onBackPressed();
             } else {
                 navController.navigate(R.id.action_nav_edit_project_to_nav_home);
             }

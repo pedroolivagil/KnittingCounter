@@ -36,7 +36,7 @@
     <string name="label_updating_data">Actializando datos</string>
     <string name="label_img_camera">Tomar una foto de la cámara</string>
     <string name="label_img_gallery">Seleccionar foto de la galería</string>
-    <string name="label_updating">Actializando</string>
+    <string name="label_updating">Actualizando</string>
     <string name="label_close_snackbar">Cerrar</string>
     <string name="label_new_project_ok">Proyecto creado correctamente</string>
     <string name="label_needle">Aguja</string>
