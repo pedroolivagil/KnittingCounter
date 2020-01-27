@@ -54,5 +54,5 @@
     <string name="error_delete_project">Error al borrar el proyecto…</string>
     <string name="title_exit_app">¿Estás seguro que quieres salir?</string>
 
-    <string name="dialog_project_home_title">Elige una acción para tu proyecto</string>
+    <string name="dialog_choose_action_title">Elige una acción</string>
 </resources>

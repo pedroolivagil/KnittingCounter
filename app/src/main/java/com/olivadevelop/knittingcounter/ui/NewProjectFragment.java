@@ -27,6 +27,7 @@ import com.olivadevelop.knittingcounter.R;
 import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.Tools;
+import com.olivadevelop.knittingcounter.tools.ToolsProject;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
@@ -140,13 +141,14 @@ public class NewProjectFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            this.requestCode = requestCode;
             try {
                 Bitmap bitmap = null;
-                if (requestCode == ProjectController.TAKE_PICTURE) {
+                if (requestCode == ToolsProject.TAKE_PICTURE) {
                     bitmap = this.tools.resultFromTakePhotoFromCamera(data);
-                } else if (requestCode == ProjectController.SELECT_PICTURE) {
+                    this.requestCode = ToolsProject.TAKE_PICTURE;
+                } else if (requestCode == ToolsProject.SELECT_PICTURE) {
                     bitmap = this.tools.resultFromTakePhotoFromGallery(data);
+                    this.requestCode = ToolsProject.SELECT_PICTURE;
                 }
                 if (bitmap != null) {
                     this.imageThumb.setImageBitmap(bitmap);

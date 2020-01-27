@@ -13,7 +13,5 @@
         android:id="@+id/projectList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:divider="@android:drawable/divider_horizontal_dim_dark" />
 </LinearLayout>

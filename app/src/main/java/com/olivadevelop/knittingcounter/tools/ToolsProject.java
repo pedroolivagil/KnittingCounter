@@ -1,4 +1,4 @@
-package com.olivadevelop.knittingcounter.ui;
+package com.olivadevelop.knittingcounter.tools;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.olivadevelop.knittingcounter.BuildConfig;
 import com.olivadevelop.knittingcounter.MainActivity;
 import com.olivadevelop.knittingcounter.R;
-import com.olivadevelop.knittingcounter.db.controllers.ProjectController;
 import com.olivadevelop.knittingcounter.tools.PermissionsChecker;
 import com.olivadevelop.knittingcounter.tools.Tools;
 
@@ -30,7 +29,10 @@ import java.io.InputStream;
 
 import static android.provider.MediaStore.Images.Media.getBitmap;
 
-class ToolsProject {
+public class ToolsProject {
+
+    public static int TAKE_PICTURE = 1;
+    public static int SELECT_PICTURE = 2;
 
     private static final float THUMBNAIL_SIZE = 300;
     private PermissionsChecker permissionsChecker;
@@ -39,7 +41,7 @@ class ToolsProject {
     private View root;
     private String currentPhotoPath;
 
-    ToolsProject(Fragment fragment, View root) {
+    public ToolsProject(Fragment fragment, View root) {
         this.mainActivity = (MainActivity) fragment.getActivity();
         this.root = root;
         this.fragment = fragment;
@@ -50,7 +52,7 @@ class ToolsProject {
         }
     }
 
-    void takePhotoFromCamera(String projectName) throws IOException {
+    public void takePhotoFromCamera(String projectName) throws IOException {
         this.mainActivity.hideImputMedia(this.root);
         if (this.permissionsChecker.checkStoragePermission() && this.permissionsChecker.checkCameraPermission()) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -63,7 +65,7 @@ class ToolsProject {
                             photoFile
                     );
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    this.fragment.startActivityForResult(takePictureIntent, ProjectController.TAKE_PICTURE);
+                    this.fragment.startActivityForResult(takePictureIntent, TAKE_PICTURE);
                 }
             }
         } else {
@@ -79,17 +81,17 @@ class ToolsProject {
         }
     }
 
-    void takePhotoFromGallery() {
+    public void takePhotoFromGallery() {
         this.mainActivity.hideImputMedia(this.root);
         if (this.permissionsChecker.checkStoragePermission()) {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
             if (intent.resolveActivity(this.mainActivity.getPackageManager()) != null) {
-                this.fragment.startActivityForResult(intent, ProjectController.SELECT_PICTURE);
+                this.fragment.startActivityForResult(intent, SELECT_PICTURE);
             }
         }
     }
 
-    Bitmap resultFromTakePhotoFromCamera(Intent data) throws IOException {
+    public Bitmap resultFromTakePhotoFromCamera(Intent data) throws IOException {
         Bundle extras = data.getExtras();
         Bitmap imageBitmap;
         if (extras == null) {
@@ -106,7 +108,7 @@ class ToolsProject {
         return imageBitmap;
     }
 
-    Bitmap resultFromTakePhotoFromGallery(Intent data) throws IOException {
+    public Bitmap resultFromTakePhotoFromGallery(Intent data) throws IOException {
         Bitmap bitmap = null;
         Uri selectedImage = data.getData();
         if (selectedImage != null) {
@@ -173,11 +175,11 @@ class ToolsProject {
         return image;
     }
 
-    String getCurrentPhotoPath() {
+    public String getCurrentPhotoPath() {
         return currentPhotoPath;
     }
 
-    void setCurrentPhotoPath(String currentPhotoPath) {
+    public void setCurrentPhotoPath(String currentPhotoPath) {
         this.currentPhotoPath = currentPhotoPath;
     }
 }

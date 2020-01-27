@@ -1,5 +1,7 @@
 package com.olivadevelop.knittingcounter.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -29,6 +31,7 @@ import com.olivadevelop.knittingcounter.model.Gallery;
 import com.olivadevelop.knittingcounter.model.GalleryAdapter;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.Tools;
+import com.olivadevelop.knittingcounter.tools.ToolsProject;
 
 import java.io.IOException;
 
@@ -36,7 +39,7 @@ import static android.app.Activity.RESULT_OK;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
 
-public class GalleryFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class GalleryFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private ToolsProject toolsProject;
     private Project projectSelected;
@@ -59,6 +62,7 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_update_list) {
+            updateGridGallery();
             this.mainActivity.customSnackBar(this.root, R.string.label_updating, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -109,28 +113,50 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
         this.mainActivity.getFab().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // add image to gallery
-                try {
-                    toolsProject.takePhotoFromCamera(projectSelected.getName());
-                } catch (IOException e) {
-                    mainActivity.customSnackBar(root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp, Snackbar.LENGTH_SHORT).show();
-                }
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(root.getContext());
+                mBuilder.setTitle(getString(R.string.dialog_choose_action_title));
+                final String[] listItems = new String[]{getString(R.string.label_img_camera), getString(R.string.label_img_gallery)};
+                mBuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        addImageToGallery(i + 1);
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
             }
         });
         this.mainActivity.hideImputMedia(this.root);
         super.onResume();
     }
 
+    private void addImageToGallery(int option) {
+        try {
+            System.out.println("OptionSelected: " + option);
+            if (option == ToolsProject.TAKE_PICTURE) {
+                toolsProject.takePhotoFromCamera(projectSelected.getName());
+            } else if (option == ToolsProject.SELECT_PICTURE) {
+                toolsProject.takePhotoFromGallery();
+            } else {
+                mainActivity.customSnackBar(root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp, Snackbar.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            mainActivity.customSnackBar(root, R.string.error_image_new_project, R.drawable.ic_warning_black_18dp, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
-            this.requestCode = requestCode;
             try {
                 Bitmap bitmap = null;
-                if (requestCode == ProjectController.TAKE_PICTURE) {
+                if (requestCode == ToolsProject.TAKE_PICTURE) {
                     bitmap = this.toolsProject.resultFromTakePhotoFromCamera(data);
-                } else if (requestCode == ProjectController.SELECT_PICTURE) {
+                    this.requestCode = ToolsProject.TAKE_PICTURE;
+                } else if (requestCode == ToolsProject.SELECT_PICTURE) {
                     bitmap = this.toolsProject.resultFromTakePhotoFromGallery(data);
+                    this.requestCode = ToolsProject.SELECT_PICTURE;
                 }
                 if (bitmap != null) {
                     createGallery();
@@ -150,6 +176,7 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
         long idNew = GalleryController.getInstance().create(this.mainActivity, g);
 
         if (idNew > 0) {
+            updateGridGallery();
             this.mainActivity.customSnackBar(this.root, R.string.label_new_project_ok, R.drawable.ic_done_black_18dp, Snackbar.LENGTH_LONG).show();
             Tools.timerExecute(this.mainActivity, 1500f, new Runnable() {
                 @Override
@@ -163,16 +190,41 @@ public class GalleryFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void updateGridGallery() {
-        Cursor images = GalleryController.getInstance().findAll(this.mainActivity);
-        GalleryAdapter ga = new GalleryAdapter(this.mainActivity, images);
+        Cursor images = GalleryController.getInstance().findAll(this.mainActivity, this.projectSelected.get_id());
+        if (images != null) {
+            GalleryAdapter ga = new GalleryAdapter(this.mainActivity, images);
 
-        GridView gv = this.root.findViewById(R.id.gallery_grid_view);
-        gv.setAdapter(ga);
-        gv.setOnItemClickListener(this);
+            GridView gv = this.root.findViewById(R.id.gallery_grid_view);
+            gv.setAdapter(ga);
+            gv.setOnItemClickListener(this);
+            gv.setOnItemLongClickListener(this);
+        }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final Gallery image = GalleryController.getInstance().findById(this.mainActivity, id);
+        AlertDialog.Builder mensaje = new AlertDialog.Builder(this.mainActivity);
+        mensaje.setTitle(R.string.dialog_choose_action_title);
+        mensaje.setCancelable(false);
+        mensaje.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                GalleryController.getInstance().delete(mainActivity, image);
+            }
+        });
+        mensaje.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mensaje.show();
+        return false;
     }
 }

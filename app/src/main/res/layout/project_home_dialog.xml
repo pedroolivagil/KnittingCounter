@@ -23,7 +23,7 @@
                 android:id="@+id/project_home_dialog_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dialog_project_home_title"
+                android:text="@string/dialog_choose_action_title"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

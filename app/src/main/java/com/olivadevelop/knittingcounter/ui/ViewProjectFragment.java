@@ -30,7 +30,7 @@ import com.olivadevelop.knittingcounter.tools.ImagePicasso;
 import java.io.File;
 
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
-import static com.olivadevelop.knittingcounter.db.controllers.ProjectController.SELECT_PICTURE;
+import static com.olivadevelop.knittingcounter.tools.ToolsProject.SELECT_PICTURE;
 import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
 import static com.olivadevelop.knittingcounter.tools.Tools.actionHoldPressView;
 

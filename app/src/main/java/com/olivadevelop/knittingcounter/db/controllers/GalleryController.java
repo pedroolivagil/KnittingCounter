@@ -5,6 +5,9 @@ import android.database.Cursor;
 
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
 import com.olivadevelop.knittingcounter.model.Gallery;
+import com.olivadevelop.knittingcounter.tools.ToolsProject;
+
+import java.io.File;
 
 import static com.olivadevelop.knittingcounter.model.Gallery.COL_CREATION_DATE;
 import static com.olivadevelop.knittingcounter.model.Gallery.COL_ID;
@@ -22,9 +25,12 @@ public class GalleryController {
 
     private static final String[] SELECT_ALL_FIELDS = {COL_ID, COL_ID_PROJECT, COL_NAME, COL_CREATION_DATE, COL_IMG_URI, COL_OPTION_CREATE_IMG};
 
-    public Cursor findAll(Context c) {
+    public Cursor findAll(Context c, long idProject) {
+        if (idProject < 0) {
+            return null;
+        }
         ManageDatabase md = new ManageDatabase(c, true);
-        return md.select(ManageDatabase.TABLE_GALLERY, SELECT_ALL_FIELDS, COL_ID + " DESC");
+        return md.select(ManageDatabase.TABLE_GALLERY, SELECT_ALL_FIELDS, COL_ID + " DESC", COL_ID_PROJECT + " = ?", new String[]{String.valueOf(idProject)});
     }
 
     public Gallery findById(Context c, long projectId) {
@@ -63,6 +69,12 @@ public class GalleryController {
     }
 
     public boolean delete(Context c, Gallery g) {
+        if (ToolsProject.TAKE_PICTURE == g.getOptionCreateImage()) {
+            File img = new File(g.getImgUri());
+            if (img.delete()) {
+                System.out.println("Imagen eliminada");
+            }
+        }
         ManageDatabase md = new ManageDatabase(c, false);
         int affectedRows = md.delete(ManageDatabase.TABLE_GALLERY, COL_ID + " = ?", new String[]{String.valueOf(g.get_id())});
         md.closeDB();

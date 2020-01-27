@@ -7,6 +7,9 @@ import android.database.Cursor;
 import com.olivadevelop.knittingcounter.db.ManageDatabase;
 import com.olivadevelop.knittingcounter.model.Project;
 import com.olivadevelop.knittingcounter.tools.Tools;
+import com.olivadevelop.knittingcounter.tools.ToolsProject;
+
+import java.io.File;
 
 import static com.olivadevelop.knittingcounter.model.Project.COL_CREATION_DATE;
 import static com.olivadevelop.knittingcounter.model.Project.COL_HEADER_IMG_URI;
@@ -17,9 +20,6 @@ import static com.olivadevelop.knittingcounter.model.Project.COL_NEEDLE_NUM;
 import static com.olivadevelop.knittingcounter.model.Project.COL_OPTION_HEADER_IMG;
 
 public class ProjectController {
-
-    public static int TAKE_PICTURE = 1;
-    public static int SELECT_PICTURE = 2;
 
     private final static ProjectController instance = new ProjectController();
 
@@ -62,8 +62,8 @@ public class ProjectController {
     public long create(Context c, Project p) {
         ManageDatabase md = new ManageDatabase(c, false);
         long idNew = md.insert(ManageDatabase.TABLE_PROJECTS,
-                new String[]{COL_NAME, COL_CREATION_DATE, COL_LAP, COL_NEEDLE_NUM, COL_HEADER_IMG_URI},
-                new String[]{p.getName().trim(), p.getCreationDate(), String.valueOf(p.getLap()), String.valueOf(p.getNeedleNum()), p.getHeaderImgUri()}
+                new String[]{COL_NAME, COL_CREATION_DATE, COL_LAP, COL_NEEDLE_NUM, COL_HEADER_IMG_URI, COL_OPTION_HEADER_IMG},
+                new String[]{p.getName().trim(), p.getCreationDate(), String.valueOf(p.getLap()), String.valueOf(p.getNeedleNum()), p.getHeaderImgUri(), String.valueOf(p.getOptionHeaderImage())}
         );
         md.closeDB();
         return idNew;
@@ -83,6 +83,12 @@ public class ProjectController {
     }
 
     public boolean delete(Context c, Project p) {
+        if (p.getHeaderImgUri() != null && ToolsProject.TAKE_PICTURE == p.getOptionHeaderImage()) {
+            File img = new File(p.getHeaderImgUri());
+            if (img.delete()) {
+                System.out.println("Imagen eliminada");
+            }
+        }
         ManageDatabase md = new ManageDatabase(c, false);
         int affectedRows = md.delete(ManageDatabase.TABLE_PROJECTS, COL_ID + " = ?", new String[]{String.valueOf(p.get_id())});
         md.closeDB();

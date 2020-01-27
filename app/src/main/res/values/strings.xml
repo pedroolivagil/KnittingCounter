@@ -55,5 +55,5 @@
     <string name="error_permissions_new_project">Check the app\'s permissions to do this…</string>
     <string name="error_delete_project">Error deleting the project…</string>
 
-    <string name="dialog_project_home_title">Choose an action for your project</string>
+    <string name="dialog_choose_action_title">Choose an action</string>
 </resources>
