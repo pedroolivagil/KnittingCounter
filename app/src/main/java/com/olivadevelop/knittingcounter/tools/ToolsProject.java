@@ -92,9 +92,8 @@ public class ToolsProject {
     }
 
     public Bitmap resultFromTakePhotoFromCamera(Intent data) throws IOException {
-        Bundle extras = data.getExtras();
         Bitmap imageBitmap;
-        if (extras == null) {
+        if (data == null || data.getExtras() == null) {
             File file = new File(this.currentPhotoPath);
             Uri uri = Uri.fromFile(file);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -103,7 +102,7 @@ public class ToolsProject {
                 imageBitmap = getBitmap(this.mainActivity.getContentResolver(), uri);
             }
         } else {
-            imageBitmap = (Bitmap) extras.get(MediaStore.EXTRA_OUTPUT);
+            imageBitmap = (Bitmap) data.getExtras().get(MediaStore.EXTRA_OUTPUT);
         }
         return imageBitmap;
     }
