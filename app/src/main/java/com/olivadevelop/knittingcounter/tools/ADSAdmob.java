@@ -43,7 +43,7 @@ public class ADSAdmob {
 
     public void showInterstitialAd() {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-//            mInterstitialAd.show();
+            mInterstitialAd.show();
         }
     }
 }
