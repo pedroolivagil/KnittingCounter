@@ -2,6 +2,9 @@ package com.olivadevelop.knittingcounter.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ import com.olivadevelop.knittingcounter.tools.ImagePicasso;
 
 import java.io.File;
 
+import static androidx.navigation.ui.NavigationUI.navigateUp;
 import static androidx.navigation.ui.NavigationUI.setupActionBarWithNavController;
 import static com.olivadevelop.knittingcounter.tools.ToolsProject.SELECT_PICTURE;
 import static com.olivadevelop.knittingcounter.tools.Tools.ID_PROJECT_SELECTED;
@@ -44,6 +49,8 @@ public class ViewProjectFragment extends Fragment {
     private ImageButton btnReset;
     private ImageButton btnAmount;
     private ImageButton btnSubtract;
+
+    private Button btnGoToTimer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +113,15 @@ public class ViewProjectFragment extends Fragment {
         this.btnSubtract = this.root.findViewById(R.id.btnSubtract);
         this.btnAmount = this.root.findViewById(R.id.buttonAdd);
 
+        this.btnGoToTimer = this.root.findViewById(R.id.btnTimerScreen);
+        // this.btnGoToCounter = this.root.findViewById(R.id.btnCounterScreen);
+
+        //this.btnGoToCounter.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
+        //this.btnGoToCounter.setText(getResources().getText(R.string.label_counter_screen));
+
+        //this.btnGoToTimer.setBackgroundColor(getResources().getColor(R.color.primaryColorAlpha));
+        //this.btnGoToTimer.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
         actionButtonView();
 
         return this.root;
@@ -144,7 +160,7 @@ public class ViewProjectFragment extends Fragment {
         actionHoldPressView(this.btnSubtract, new Runnable() {
             @Override
             public void run() {
-                projectSelected.removeLap();
+                ProjectController.getInstance().removeLap(projectSelected);
                 boolean result = ProjectController.getInstance().update(mainActivity, projectSelected);
                 if (result) {
                     updateTextCounter();
@@ -154,7 +170,7 @@ public class ViewProjectFragment extends Fragment {
         actionHoldPressView(this.btnAmount, new Runnable() {
             @Override
             public void run() {
-                projectSelected.addLap();
+                ProjectController.getInstance().addLap(projectSelected);
                 boolean result = ProjectController.getInstance().update(mainActivity, projectSelected);
                 if (result) {
                     updateTextCounter();
@@ -176,6 +192,14 @@ public class ViewProjectFragment extends Fragment {
                     updateTextCounter();
                 }
                 return true;
+            }
+        });
+        this.btnGoToTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(ID_PROJECT_SELECTED, projectSelected.get_id());
+                Navigation.findNavController(root).navigate(R.id.action_nav_project_to_stopwatchFragment, bundle);
             }
         });
     }

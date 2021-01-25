@@ -128,4 +128,20 @@ public class ProjectController {
         }
         return projectSelected;
     }
+
+    public void addLap(Project p) {
+        int lap = p.getLap() + 1;
+        if (lap > 9999) {
+            lap = 9999;
+        }
+        p.setLap(lap);
+    }
+
+    public void removeLap(Project p) {
+        int lap = p.getLap() - 1;
+        if (lap < 0) {
+            lap = 0;
+        }
+        p.setLap(lap);
+    }
 }

@@ -2,7 +2,9 @@ package com.olivadevelop.knittingcounter.model;
 
 import com.olivadevelop.knittingcounter.tools.Tools;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Project {
     public static final String COL_ID = "_id";
@@ -19,24 +21,12 @@ public class Project {
     private Integer lap = 0;
     private Float needleNum = 0f;
     private String headerImgUri;
+    private Long time = 0L;
+    private List<TimerHistoric> historic = new ArrayList<>();
 
     private int optionHeaderImage = 0;
 
     public Project() {
-    }
-
-    public void addLap() {
-        this.lap = lap + 1;
-        if (this.lap > 9999) {
-            this.lap = 9999;
-        }
-    }
-
-    public void removeLap() {
-        this.lap = lap - 1;
-        if (this.lap < 0) {
-            this.lap = 0;
-        }
     }
 
     public Integer get_id() {
@@ -96,5 +86,21 @@ public class Project {
 
     public void setOptionHeaderImage(int optionHeaderImage) {
         this.optionHeaderImage = optionHeaderImage;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
+    public List<TimerHistoric> getHistoric() {
+        return historic;
+    }
+
+    public void setHistoric(List<TimerHistoric> historic) {
+        this.historic = historic;
     }
 }

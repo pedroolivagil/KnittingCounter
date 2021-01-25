@@ -12,6 +12,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_tools">Tools</string>
     <string name="menu_exit">Exit</string>
+    <string name="menu_stopwatch">Stopwatch</string>
 
     <string name="action_settings">Settings</string>
 
@@ -25,6 +26,8 @@
     <string name="btn_bar_delete">Delete</string>
     <string name="btn_bar_edit">Edit</string>
     <string name="btn_bar_gallery">Gallery</string>
+    <string name="btn_counter_screen">Go to counter</string>
+    <string name="btn_timer_screen">Go to stopwatch</string>
 
     <string name="new_project_name">Project</string>
     <string name="new_project_name_placeholder">Enter the name of the project</string>
@@ -46,6 +49,8 @@
     <string name="label_update_project_ok">Changes saved successfully</string>
     <string name="label_hold_btn_reset">Press and hold the button to reset the project counter</string>
     <string name="label_cancel_new_project">If you go out, you will lose the changes you have made. Do you want to continue?</string>
+    <string name="label_counter_screen">Counter</string>
+    <string name="label_timer_screen">Stopwatch</string>
 
     <string name="default_project_name">Default project name</string>
 

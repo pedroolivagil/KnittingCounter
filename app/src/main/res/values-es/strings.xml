@@ -11,6 +11,7 @@
     <string name="menu_gallery">Galería</string>
     <string name="menu_tools">Herramientas</string>
     <string name="menu_exit">Salir</string>
+    <string name="menu_stopwatch">Cronómetro</string>
 
     <string name="action_settings">Configuraciones</string>
 
@@ -24,6 +25,8 @@
     <string name="btn_bar_delete">Eliminar</string>
     <string name="btn_bar_edit">Editar</string>
     <string name="btn_bar_gallery">Galería</string>
+    <string name="btn_counter_screen">Ir al contador</string>
+    <string name="btn_timer_screen">Ir al cronómetro</string>
 
     <string name="new_project_name">Proyecto</string>
     <string name="new_project_name_placeholder">Ingrese el nombre del proyecto</string>
@@ -44,6 +47,8 @@
     <string name="label_update_project_ok">Cambios guardados correctamente</string>
     <string name="label_hold_btn_reset">Mantenga presionado el botón para restablecer el contador del proyecto</string>
     <string name="label_cancel_new_project">Si sales, perderás los cambios que hayas realizado. ¿Deseas continuar?</string>
+    <string name="label_counter_screen">Contador</string>
+    <string name="label_timer_screen">Cronómetro</string>
 
     <string name="default_project_name">Proyecto de ejemplo</string>
 
